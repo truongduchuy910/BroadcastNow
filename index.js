@@ -1,4 +1,5 @@
 //nodemon --exec "heroku local" --signal SIGTERM
+//heroku run rake db:migrate
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
