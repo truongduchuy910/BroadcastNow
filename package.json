@@ -1,7 +1,7 @@
 {
-  "name": "broadcastnow",
+  "name": "node-js-getting-started",
   "version": "0.3.0",
-  "description": "Broadcast System On Messenger",
+  "description": "A sample Node.js app using Express 4",
   "engines": {
     "node": "10.x"
   },
@@ -11,21 +11,16 @@
     "test": "node test.js"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "cool-ascii-faces": "^1.3.4",
     "ejs": "^2.5.6",
-    "express": "^4.16.4",
-    "morgan": "^1.9.1",
-    "path": "^0.12.7",
-    "puppeteer": "^1.11.0"
+    "express": "^4.15.2"
   },
   "devDependencies": {
-    "request": "^2.88.0",
+    "request": "^2.81.0",
     "tape": "^4.7.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/truongduchuy910/BroadcastNow.git"
+    "url": "https://github.com/heroku/node-js-getting-started"
   },
   "keywords": [
     "node",
