@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    font-size: 14px ;
+    font-family: 'Roboto', sans-serif;
+
+}
+.container {
+    max-width: 940px;
+    margin: auto;
+}
+.panel-heading {
+    text-align: center;
+}
+.boxNotification {
+    background-color: #f1f0f0;
+    color: rgba(0, 0, 0, 1);
+    border-radius: 1.3em;
+    margin-top: 17px;
+    margin-bottom: 15px;
+    padding: 6px 12px 6px 12px;
+}
+.date {
+    border-radius: 20px;
+    padding: 10px;
+    padding-left: 0px;
+}
+.title {
+    text-align: center;
+    font-size: 24;
+}
