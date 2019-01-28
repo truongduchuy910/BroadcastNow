@@ -1,0 +1,17 @@
+Subscribe
+curl -X GET "localhost:5000/webhook?hub.verify_token=truongduc.huy&hub.challenge=CHALLENGE_ACCEPTED&hub.mode=subscribe"
+
+Mesenger Recive
+curl -H "Content-Type: application/json" -X POST "localhost:5000/webhook" -d "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\"ngochuy2k\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\"create #truongduchuy\" } } ] }]}"
+connect to mongoDB
+mongo "mongodb+srv://broadcastnow-rqfev.gcp.mongodb.net/test" --username broadcastnow
+
+Whitelist Entry:  171.225.38.253/32
+curl -X POST -H "Content-Type: application/json" -d "{ \"name\": \"test\", }" "https://graph.facebook.com/v2.11/me/custom_labels?access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
+
+Xem các thẻ đã tạo
+curl -X GET "https://graph.facebook.com/v2.11/me/custom_labels?fields=name&access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
+
+Xóa thẻ đã tạo
+curl -X DELETE -H "Content-Type: application/json" "https://graph.facebook.com/v2.11/<CUSTOM_LABEL_ID>?access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
+

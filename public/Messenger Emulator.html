@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+            <script>
+                    document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +
+                    ':5000/livereload.js?snipver=1"></' + 'script>')
+                  </script> 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <title>Emulator</title>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">BroadcastNow</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class = "container">
+            <section>
+            </section>
+            <section>
+                <div class = "panel panel-default">
+                    <div class="panel-heading">
+                        <h4>Emulator</h4>
+                    </div>
+                    <div class="panel-body">                        
+                        <div class="form-group">
+                                <label for="usr">PSID</label>
+                                <input type="text" class="form-control" id="PSID" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="usr">Hashtag</label>
+                            <input type="text" class="form-control" id="Hashtag" value="">
+                        </div>
+                        <div class="form-group">
+                                <label for="usr">Content</label>
+                                <input type="text" class="form-control" id="Content" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="usr">Action</label>
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "createButton">create</button></div></div>   
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "followButton">follow</button></div></div>   
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "sendButton">send</button></div></div> 
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "deleteButton">delete</button></div></div>   
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "unfollowButton">unfollow</button></div></div> 
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "mycreateButton">mycreate</button></div></div> 
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "myfollowButton">myfollow</button></div></div> 
+                                <div class="col-sm-3"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "helpButton">help</button></div></div> 
+                                <div class="col-sm-12"><div class="form-group"><button type="button" class="btn btn-primary form-control" id = "getNotifications">Get Notifications</button></div></div> 
+                            </div>
+                        </div>
+                        <div class="form-group">
+                                <label for="usr">PAGE_ACCESS_TOKEN</label>
+                                <input type="text" class="form-control" id="PAGE_ACCESS_TOKEN" value="">
+                        </div>
+                        <div class="form-group">
+                                <label for="usr">CUSTOM_LABEL_ID</label>
+                                <input type="text" class="form-control" id="CUSTOM_LABEL_ID" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="usr">Create cURL debugging</label>
+                            <br/>
+                            <div class="row">
+                                <div class="col-sm-6"><div class="form-group"><button type="button" class="btn btn-primary form-control" id="CREATING_A_LABEL_Button">CREATING A LABEL</button></div></div>
+                                <div class="col-sm-6"><div class="form-group"><button type="button" class="btn btn-primary form-control" id="ASSOCIATING_A_LABEL_TO_PSID_Button">ASSOCIATING A LABEL TO PSID</button></div></div>
+                                <div class="col-sm-6"><div class="form-group"><button type="button" class="btn btn-primary form-control" id="SENDING_MESSAGE_WITH_A_LABEL_Button">SENDING MESSAGE WITH A LABEL</button></div></div>
+                                <div class="col-sm-6"><div class="form-group"><button type="button" class="btn btn-primary form-control" id="REMOVING_A_LABEL_FROM_A_PSID_Button">REMOVING A LABEL FROM A PSID</button></div></div>
+                                <div class="col-sm-6"><div class="form-group"><button type="button" class="btn btn-primary form-control" id="RETRIEVING_A_LIST_OF_ALL_LABELS_Button">RETRIEVING A LIST OF ALL LABELS</button></div></div>
+                                <div class="col-sm-6"><div class="form-group"><button type="button" class="btn btn-primary form-control" id="RETRIEVING_LABELS_ASSOCIATED_WITH_A_PSID_Button">RETRIEVING LABELS ASSOCIATED WITH A PSID</button></div></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                                <label for="usr">Result</label>
+                                <input type="text" class="form-control" id="CUSTOM_LABEL_ID" value="">
+                        </div>
+                    </div>
+                </div>
+            </section> 
+            <section>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Request</div>
+                            <div class="panel-body" id="request"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Reponse</div>
+                            <div class="panel-body" id="reponse"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>           
+        </div>
+    </body>
+    <footer>
+    </footer>
+    <script>
+document.getElementById("createButton").onclick = createButton;
+document.getElementById("followButton").onclick = followButton;
+document.getElementById("sendButton").onclick = sendButton;
+document.getElementById("deleteButton").onclick = deleteButton;
+document.getElementById("mycreateButton").onclick = mycreateButton;
+document.getElementById("unfollowButton").onclick = unfollowButton;
+document.getElementById("myfollowButton").onclick = myfollowButton;
+document.getElementById("helpButton").onclick = helpButton;
+document.getElementById("getNotifications").onclick = getNotifications;
+function getNotifications() {
+    AJAX("GET", "/public_dut","");
+}
+function createButton(){
+    var PSID = document.getElementById('PSID').value;
+    var Hashtag = document.getElementById('Hashtag').value;
+    var content = "create #"+Hashtag;
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+function followButton(){
+    var PSID = document.getElementById('PSID').value;
+    var Hashtag = document.getElementById('Hashtag').value;
+    var content = "follow #"+Hashtag;
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+function sendButton(){
+    var PSID = document.getElementById('PSID').value;
+    var Hashtag = document.getElementById('Hashtag').value;
+    var text = document.getElementById('Content').value;
+    var content = "send #"+Hashtag+" "+text;
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+function deleteButton(){
+    var PSID = document.getElementById('PSID').value;
+    var Hashtag = document.getElementById('Hashtag').value;
+    var content = "delete #"+Hashtag;
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+function mycreateButton(){
+    var PSID = document.getElementById('PSID').value;
+    var content = "mycreate";
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+function unfollowButton(){
+    var PSID = document.getElementById('PSID').value;
+    var Hashtag = document.getElementById('Hashtag').value;
+    var content = "unfollow #"+Hashtag;
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+function myfollowButton(){
+    var PSID = document.getElementById('PSID').value;
+    var content = "myfollow";
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+function helpButton(){
+    var PSID = document.getElementById('PSID').value;
+    var content = "help"
+    var request = 
+    "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
+    AJAX("POST", "/webhook", request);
+}
+document.getElementById("CREATING_A_LABEL_Button").onclick = CREATING_A_LABEL_Button;
+document.getElementById("ASSOCIATING_A_LABEL_TO_PSID_Button").onclick = ASSOCIATING_A_LABEL_TO_PSID_Button;
+document.getElementById("SENDING_MESSAGE_WITH_A_LABEL_Button").onclick = SENDING_MESSAGE_WITH_A_LABEL_Button;
+document.getElementById("REMOVING_A_LABEL_FROM_A_PSID_Button").onclick = REMOVING_A_LABEL_FROM_A_PSID_Button;
+document.getElementById("RETRIEVING_A_LIST_OF_ALL_LABELS_Button").onclick = RETRIEVING_A_LIST_OF_ALL_LABELS_Button;
+document.getElementById("RETRIEVING_LABELS_ASSOCIATED_WITH_A_PSID_Button").onclick = RETRIEVING_LABELS_ASSOCIATED_WITH_A_PSID_Button;
+function CREATING_A_LABEL_Button(){}
+function ASSOCIATING_A_LABEL_TO_PSID_Button(){}
+function SENDING_MESSAGE_WITH_A_LABEL_Button(){}
+function REMOVING_A_LABEL_FROM_A_PSID_Button(){}
+function RETRIEVING_A_LIST_OF_ALL_LABELS_Button(){}
+function RETRIEVING_LABELS_ASSOCIATED_WITH_A_PSID_Button(){}       
+function AJAX(method, URL, request) {
+    var text = 'curl -H "Content-Type: application/json" -X ' + method + ' "localhost:5000/webhook" -d ' + request;
+    document.getElementById('request').innerHTML = text;
+    var xhttp = new XMLHttpRequest();
+    xhttp.open(method, URL, true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(request);
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById('reponse').innerHTML = this.responseText;
+        }
+    };
+}
+    </script>
+</html>
