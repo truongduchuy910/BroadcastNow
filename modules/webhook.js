@@ -284,6 +284,7 @@ function callSendAPI(sender_psid, response) {
   }, (err, res, body) => {
     if (!err) {
       console.log('Gửi <', response,'> tới <', sender_psid,'>', ' thành công');
+      console.log("body: ", body);
     } else {
       console.log('Gửi <', response,'> tới <', sender_psid,'>', ' thất bại');
     }
