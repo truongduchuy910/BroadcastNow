@@ -232,6 +232,7 @@ function sendHashtag(PSID, Hashtag, Content) {
         if (!err) {
           var message_creative_id = body.message_creative_id;
           history(PSID, "Tạo tin nhắn để phát tán", "ID tin nhắn: " + message_creative_id); 
+          callSendAPI(PSID, "Đang chuẩn bị để gửi");
           request({
             uri: "https://graph.facebook.com/v2.11/me/broadcast_messages",
             qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
@@ -246,6 +247,7 @@ function sendHashtag(PSID, Hashtag, Content) {
           }, (err, res, body) => {
             if (!err) {
               history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "thành công, ID sự kiện: " + body.broadcast_id); 
+              callSendAPI(PSID, "Gửi thành công");
             } else {
               history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, Lỗi từ Messenger Flatform");
             }
@@ -258,6 +260,7 @@ function sendHashtag(PSID, Hashtag, Content) {
     } else {
       if (PSID !== docs[0].PSID) {
         history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, không có quyền gửi thẻ");
+        callSendAPI(PSID, "Bạn chỉ có thể gửi tới thẻ mình đã tạo");
       } else {
         history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, Lỗi từ Messenger Flatform");  
       };
@@ -283,10 +286,7 @@ function callSendAPI(sender_psid, response) {
     json: request_body
   }, (err, res, body) => {
     if (!err) {
-      console.log('Gửi <', response,'> tới <', sender_psid,'>', ' thành công');
-      console.log("body: ", body);
     } else {
-      console.log('Gửi <', response,'> tới <', sender_psid,'>', ' thất bại');
     }
   }); 
   
