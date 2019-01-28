@@ -51,6 +51,10 @@ function findHashtag(content) {
     } 
 }
 function findContent(content) {
-    return content.slice(findHashtag(content) + 2, content.length - 1   );
+    var hashtag = findHashtag(content);
+    var start = findCommand(content).length + 1 + hashtag.length + 2;
+    var end = content.length;console.log('start: ', start,' end: ', end);
+    var text = content.slice(start , end);
+    return text;
 }
 module.exports.parse = parse;
