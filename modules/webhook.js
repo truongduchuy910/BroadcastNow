@@ -47,16 +47,16 @@ function creatHashtag (PSID, Hashtag) {
     "name": Hashtag  
   };
   request({
-    "uri": "https://graph.facebook.com/v2.11/me/custom_labels",
-    "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
-    "method": "POST",
-    "json": request_body
+    uri: "https://graph.facebook.com/v2.11/me/custom_labels",
+    qs: { "access_token": process.env.PAGE_ACCESS_TOKEN },
+    method: "POST",
+    json: request_body
   }, (err, res, body) => {
     if (body.id) {
       var content = {
-        "name": Hashtag,
-        "ID": body.id,
-        "PSID": PSID
+        name: Hashtag,
+        ID: body.id,
+        PSID: PSID
       }
       db.insertDocs("Messenger", "Hashtags", content);
       callSendAPI(PSID, 'Tạo thẻ #' + Hashtag + ' thành công');
@@ -70,17 +70,17 @@ function creatHashtag (PSID, Hashtag) {
 //------------------------------------------------------------------------------
 //Kiểm tra sự tồn tại của Hashtags trước khi thực hiện việc đăng ký PSID với Label trên Facebook
 function followHashtag(PSID, Hashtag) {
-  db.findDocs("Messenger", "Hashtags", {"name": Hashtag}, function(error, docs) {
+  db.findDocs("Messenger", "Hashtags", {name: Hashtag}, function(error, docs) {
     if (docs[0]) {
       LabelID = docs[0].ID;
       let request_body = {    
-        "user": PSID
+        user: PSID
       };
       request({
-        "uri": "https://graph.facebook.com/v2.11/" + LabelID + "/label",
-        "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
-        "method": "POST",
-        "json": request_body
+        uri: "https://graph.facebook.com/v2.11/" + LabelID + "/label",
+        qs: { "access_token": process.env.PAGE_ACCESS_TOKEN },
+        method: "POST",
+        json: request_body
       }, (err, res, body) => {
         if (!err) {
           callSendAPI(PSID, 'Đăng ký nhận thông báo từ #' + Hashtag + ' thành công');
@@ -103,12 +103,12 @@ function unfollowHashtag(PSID, Hashtag) {
     if (docs[0]) {
       LabelID = docs[0].ID;
       request({
-        "uri": "https://graph.facebook.com/v2.11/" + LabelID + "/label",
-        "qs": {
-          "user": PSID,
-          "access_token": process.env.PAGE_ACCESS_TOKEN
+        uri: "https://graph.facebook.com/v2.11/" + LabelID + "/label",
+        qs: {
+          user: PSID,
+          access_token: process.env.PAGE_ACCESS_TOKEN
         },
-        "method": "DELETE"
+        method: "DELETE"
       }, (err, res, body) => {
         if (!err) {
           callSendAPI(PSID, 'Hủy nhận thông báo từ #' + Hashtag + ' thành công');
@@ -128,12 +128,12 @@ function unfollowHashtag(PSID, Hashtag) {
 //Khi lệnh gửi thành công, FB sẽ gửi về một đống JSON bùi nhùi nên phải phần tích để trả kết quả về
 function myfollow(PSID) {
   request({
-    "uri": "https://graph.facebook.com/v2.11/" + PSID + "/custom_labels",
-    "qs": {
-      "fields": "name",
-      "access_token" : process.env.PAGE_ACCESS_TOKEN
+    uri: "https://graph.facebook.com/v2.11/" + PSID + "/custom_labels",
+    qs: {
+      fields: "name",
+      access_token : process.env.PAGE_ACCESS_TOKEN
     },
-    "method": "GET"
+    method: "GET"
   },(err, res, body) => {
       if (!err) {
         data = JSON.parse(body).data;
@@ -153,16 +153,16 @@ function myfollow(PSID) {
 //------------------------------------------------------------------------------
 //Lấy document chưa Hashtags và xem người dùng có quyền xóa thẻ này hay không
 function deleteHashtag(PSID, Hashtag) {
-  db.findDocs("Messenger", "Hashtags", {"name": Hashtag}, function(error, docs) {
+  db.findDocs("Messenger", "Hashtags", {name: Hashtag}, function(error, docs) {
     if (docs[0]){
       if (docs[0].PSID == PSID) {
         request({
-          "uri": "https://graph.facebook.com/v2.11/" + docs[0].ID,
-          "qs": {"access_token": process.env.PAGE_ACCESS_TOKEN},
-          "method": "DELETE"
+          uri: "https://graph.facebook.com/v2.11/" + docs[0].ID,
+          qs: {"access_token": process.env.PAGE_ACCESS_TOKEN},
+          method: "DELETE"
         }, (err, res, body) => {
           if (!err) {
-            db.deleteDocs("Messenger", "Hashtags", {"name": Hashtag});
+            db.deleteDocs("Messenger", "Hashtags", {name: Hashtag});
             callSendAPI(PSID, 'Xóa thẻ #' + Hashtag + ' thành công');
             history(PSID, "Xóa thẻ #" + Hashtag, "thành công"); 
           } else {
@@ -182,7 +182,7 @@ function deleteHashtag(PSID, Hashtag) {
 }
 //------------------------------------------------------------------------------
 function mycreate(PSID) {
-  db.findDocs("Messenger", "Hashtags", {"PSID": PSID}, function(error,docs) {
+  db.findDocs("Messenger", "Hashtags", {PSID: PSID}, function(error,docs) {
     if (docs) {  
       var text = "các thẻ bạn đã tạo: ";
       docs.forEach( element => {
@@ -215,10 +215,10 @@ function sendHashtag(PSID, Hashtag, Content) {
     if (docs && PSID == docs[0].PSID) {
       //Tạo một tin nhắn Broadcast để chuẩn bị gửi
       request({
-        "uri": "https://graph.facebook.com/v2.11/me/message_creatives",
-        "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
-        "method": "POST",
-        "json": {
+        uri: "https://graph.facebook.com/v2.11/me/message_creatives",
+        qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
+        method: "POST",
+        json: {
           "messages": [
           {
             "dynamic_text": {
@@ -233,10 +233,10 @@ function sendHashtag(PSID, Hashtag, Content) {
           var message_creative_id = body.message_creative_id;
           history(PSID, "Tạo tin nhắn để phát tán", "ID tin nhắn: " + message_creative_id); 
           request({
-            "uri": "https://graph.facebook.com/v2.11/me/broadcast_messages",
-            "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
-            "method": "POST",
-            "json": {    
+            uri: "https://graph.facebook.com/v2.11/me/broadcast_messages",
+            qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
+            method: "POST",
+            json: {    
               "message_creative_id": message_creative_id,
               "custom_label_id": docs[0].ID,
               "notification_type": "REGULAR",
@@ -268,17 +268,19 @@ function sendHashtag(PSID, Hashtag, Content) {
 //------------------------------------------------------------------------------
 function callSendAPI(sender_psid, response) {
   let request_body = {
-    "recipient": {
-      "id": sender_psid
+    recipient: {
+      id: sender_psid
     },
-    "message": response
-  }
+    message: {
+      text: response
+    }
+  };
   // Send the HTTP request to the Messenger Platform
   request({
-    "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": process.env.PAGE_ACCESS_TOKEN },
-    "method": "POST",
-    "json": request_body
+    uri: "https://graph.facebook.com/v2.6/me/messages",
+    qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
+    method: "POST",
+    json: request_body
   }, (err, res, body) => {
     if (!err) {
       console.log('Gửi <', response,'> tới <', sender_psid,'>', ' thành công');

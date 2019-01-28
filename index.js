@@ -7,8 +7,6 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const webhook = require('./modules/webhook.js')
 const public_dut = require('./modules/public_dut.js');
-
-//const svdutudnvn = require('./modules/notifications.js')
 const app = express();
 const PORT = process.env.PORT || 5000
 const server = http.createServer(app);
