@@ -54,7 +54,7 @@ function findContent(content) {
     var hashtag = findHashtag(content);
     var start = findCommand(content).length + 1 + hashtag.length + 2;
     var end = content.length;console.log('start: ', start,' end: ', end);
-    var text = '[' + hashtag + ']' + content.slice(start , end);
+    var text = '[#' + hashtag + ']' + content.slice(start , end);
     return text;
 }
 module.exports.parse = parse;
