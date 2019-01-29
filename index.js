@@ -50,7 +50,7 @@ app
   })
   .get('/public_dut', async (req,res) => {
     var content = await public_dut.getNotifications();
-    res.send(content);
+    res.send("OK");
   })
   .get('/getData', async(req,res) => {
     await res.send('OK');
