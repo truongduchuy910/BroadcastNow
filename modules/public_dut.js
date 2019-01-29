@@ -62,7 +62,6 @@ async function getAll() {
   await browser.close();
   return data;
 }
-//BUILDING
 async function getNotifications() {
   var notification = await getAll();
   notification.forEach(element => {
@@ -72,7 +71,7 @@ async function getNotifications() {
       } else {
         console.log("new > ".yellow);
         console.log(element.body);
-        webhook.sendHashtag(process.env.public_dut, "public.dut", element.body);
+        webhook.sendHashtag(process.env.public_dut, "public.dut", element.date + element.title);
         db.insertDocs('Messenger', "public.dut", element);
       }
     })
