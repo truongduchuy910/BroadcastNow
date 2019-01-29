@@ -222,7 +222,7 @@ function sendHashtag(PSID, Hashtag, Content) {
           "messages": [
           {
             "dynamic_text": {
-              "text": "[#" + hashtag + "]" + Content,
+              "text": "[#" + Hashtag + "]" + Content,
               "fallback_text": "OK"
             } 
           }
