@@ -39,7 +39,7 @@ function parse(message, PSID) {
 function findCommand(content) {
     var end = 0; 
     while (content[end] != ' ' && end < content.length) end++;
-    return content.slice(0, end);
+    return content.slice(0, end).toLowerCase();
 }
 function findHashtag(content) {
     var start = content.lastIndexOf('#') + 1;

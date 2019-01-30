@@ -17,50 +17,54 @@ async function getAll() {
   await page.goto('http://sv.dut.udn.vn/G_Thongbao.aspx');
   console.log('lấy dữ liệu');
 
-  var data = await page.evaluate(() => {
-    //nạp  HTML vào body để xử lí và nạp body đã xử lí vào ngược lại HTML
-    var body = document.querySelectorAll('body')[0].innerHTML;
-    body = '<div>' + body + '</div>';
-    body = body.replace(/<p class="MsoNormal">/g, '</div> <div class = "notification"> <p class="MsoNormal">');
-    document.querySelectorAll('body')[0].innerHTML = body;
-    //brower console: lấy dữ liệu web lưu vào biến data
-    var listDivNotification = document.querySelectorAll('div.notification');
-    listDivNotification = [...listDivNotification];
-    listDivNotification.reverse();
-    let list= []    ; 
-    for (var i = 0;i < listDivNotification.length;i++) {
-        var listLink = listDivNotification[i].querySelectorAll('a');
-        var collectLink = [];
-        for (var j = 0; j < listLink.length;j++) {
-            collectLink.push({
-                content: listLink[j].innerText,
-                url: listLink[j].href
-            });
-        };
-        var dateNotification;
-        var titleNotification;
-        try {
-          dateNotification = listDivNotification[i].querySelectorAll('p.MsoNormal>b')[0].textContent;
-          titleNotification = listDivNotification[i].querySelectorAll('p.MsoNormal>span')[0].textContent;
-        }
-        catch(error) {
-          dateNotification = 'unknown';
-          titleNotification = 'unknown';
-        }
-        var blockNoti = listDivNotification[i].innerText;                
-        // xử lý xóa date và title cho content
-        {
-          var start = blockNoti.lastIndexOf('\n\n') + 2;
-          var end = blockNoti.length;
-          var content = blockNoti.slice(start, end);
-        }
-        var notification = {date: dateNotification,title: titleNotification,content: content,link: collectLink, body:blockNoti};
-        list.push(notification);
-      };     
-      return list;   
-  })
+  var data = await page.evaluate(() => { return evaluatePage()});
   await browser.close();
   return data;
+}
+function evaluatePage() {//nạp  HTML vào body để xử lí và nạp body đã xử lí vào ngược lại HTML
+  var body = document.querySelectorAll('body')[0].innerHTML;
+  body = '<div>' + body + '</div>';
+  body = body.replace(/<p class="MsoNormal">/g, '</div> <div class = "notification"> <p class="MsoNormal">');
+  document.querySelectorAll('body')[0].innerHTML = body;
+  //brower console: lấy dữ liệu web lưu vào biến data
+  var listDivNotification = document.querySelectorAll('div.notification');
+  listDivNotification = [...listDivNotification];
+  listDivNotification.reverse();
+  let list= []    ; 
+  listDivNotification.forEach(element => {
+      var listLink =element.querySelectorAll('a');
+      var collectLink = [];
+      listLink.forEach( link => {
+          collectLink.push({
+              content: link.innerText,
+              url: link.href
+          });
+      });
+      var date;
+      var dateObj;
+      var title;
+      try {
+        date = element.querySelectorAll('p.MsoNormal>b>span')[0].textContent;
+        title = element.querySelectorAll('p.MsoNormal>span')[0].textContent;
+        if (date) dateObj = new Date(date.slice(6,10), date.slice(3,5), date.slice(0,2));
+      }
+      catch(error) {
+        date = 'unknown';
+        title = 'unknown';
+        dateObj = 0;
+        console.log(error);
+      }
+      var allText = element.innerText;                
+      // xử lý xóa date và title cho content
+      {
+        var start = allText.lastIndexOf('\n\n') + 2;
+        var end = allText.length;
+        var content = allText.slice(start, end);
+      }
+      var notification = {date: date, dateObj: dateObj,title: title,content: content,link: collectLink, body:allText};
+      list.push(notification);
+    });  
+    return list;    
 }
 async function getNotifications() {
   var notification = await getAll();

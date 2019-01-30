@@ -15,3 +15,6 @@ curl -X GET "https://graph.facebook.com/v2.11/me/custom_labels?fields=name&acces
 Xóa thẻ đã tạo
 curl -X DELETE -H "Content-Type: application/json" "https://graph.facebook.com/v2.11/<CUSTOM_LABEL_ID>?access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
 
+Xem thông tin PSID
+curl -X GET "https://graph.facebook.com/1964519013637071?fields=first_name,last_name,profile_pic&access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
+
