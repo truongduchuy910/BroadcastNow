@@ -12,7 +12,28 @@ function handle(sender_psid, webhook_event){
   }
 }
 function handleMessage(sender_psid, received_message) {
-    db.addUser(sender_psid);
+  db.findDocs('Messenger', 'PSIDs', {PSID: sender_psid}, function(error, docs) {
+    if (docs[0]) {
+    } else {
+      request({
+        uri: "https://graph.facebook.com/" + sender_psid,
+        qs: { 
+          "access_token": process.env.PAGE_ACCESS_TOKEN,
+          "fields": [first_name,last_name,profile_pi]
+        },
+        method: "GET",
+      }, (err, res, body) => {        
+        var userID = {
+          PSID: sender_psid,
+          first_name: body.first_name,
+          last_name: body.last_name,
+          profile_pic: body.profile_pic
+        }
+        insertDocs('Messenger', 'PSIDs', userID);
+        console.log('Thêm người dùng: ', sender_psid);
+      }); 
+    }
+  })
     if (received_message.text) {    
       //syntax.parse will be callback to webhook
       syntax.parse(received_message.text, sender_psid);
