@@ -18,3 +18,14 @@ curl -X DELETE -H "Content-Type: application/json" "https://graph.facebook.com/v
 Xem thông tin PSID
 curl -X GET "https://graph.facebook.com/1964519013637071?fields=first_name,last_name,profile_pic&access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
 
+curl -X POST -H "Content-Type: application/json" -d '{
+  "<PROPERTY_NAME>": "<NEW_PROPERTY_VALUE>",
+  "<PROPERTY_NAME>": "<NEW_PROPERTY_VALUE>",
+  ...
+}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=<PAGE_ACCESS_TOKEN>"
+
+curl -X DELETE -H "Content-Type: application/json" -d '{
+  "fields": [
+    "persistent_menu"
+  ]
+}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
