@@ -18,8 +18,8 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
-require('./routes/functions')(app);
-require('./routes/messenger')(app);
-require('./routes/pages')(app);
+require('./routers/functions')(app);
+require('./routers/messenger')(app);
+require('./routers/pages')(app);
 app.listen(PORT, () => console.log(`Listening on ${ PORT } `))
 

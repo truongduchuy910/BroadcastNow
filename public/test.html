@@ -124,7 +124,7 @@ function createButton(){
     var content = "create #"+Hashtag;
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 function followButton(){
     var PSID = document.getElementById('PSID').value;
@@ -132,7 +132,7 @@ function followButton(){
     var content = "follow #"+Hashtag;
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 function sendButton(){
     var PSID = document.getElementById('PSID').value;
@@ -141,7 +141,7 @@ function sendButton(){
     var content = "send #"+Hashtag+" "+text;
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 function deleteButton(){
     var PSID = document.getElementById('PSID').value;
@@ -149,14 +149,14 @@ function deleteButton(){
     var content = "delete #"+Hashtag;
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 function mycreateButton(){
     var PSID = document.getElementById('PSID').value;
     var content = "mycreate";
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 function unfollowButton(){
     var PSID = document.getElementById('PSID').value;
@@ -164,21 +164,21 @@ function unfollowButton(){
     var content = "unfollow #"+Hashtag;
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 function myfollowButton(){
     var PSID = document.getElementById('PSID').value;
     var content = "myfollow";
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 function helpButton(){
     var PSID = document.getElementById('PSID').value;
     var content = "help"
     var request = 
     "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\""+PSID+"\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\""+content+"\" } } ] }]}";
-    AJAX("POST", "/webhook", request);
+    AJAX("POST", "/webhook/messenger", request);
 }
 document.getElementById("CREATING_A_LABEL_Button").onclick = CREATING_A_LABEL_Button;
 document.getElementById("ASSOCIATING_A_LABEL_TO_PSID_Button").onclick = ASSOCIATING_A_LABEL_TO_PSID_Button;
@@ -193,7 +193,7 @@ function REMOVING_A_LABEL_FROM_A_PSID_Button(){}
 function RETRIEVING_A_LIST_OF_ALL_LABELS_Button(){}
 function RETRIEVING_LABELS_ASSOCIATED_WITH_A_PSID_Button(){}       
 function AJAX(method, URL, request) {
-    var text = 'curl -H "Content-Type: application/json" -X ' + method + ' "localhost:5000/webhook" -d ' + request;
+    var text = 'curl -H "Content-Type: application/json" -X ' + method + ' "localhost:5000/webhook/messenger" -d ' + request;
     document.getElementById('request').innerHTML = text;
     var xhttp = new XMLHttpRequest();
     xhttp.open(method, URL, true);
