@@ -1,7 +1,7 @@
 const webhook = require('../modules/messenger')
 
 module.exports = function(app) {
-    app.post('/webhook', (req, res) => {  
+    app.post('/webhook/messenger', (req, res) => {  
         let body = req.body;
         if (body.object === 'page') {
           body.entry.forEach(function(entry) {
@@ -13,7 +13,7 @@ module.exports = function(app) {
           res.sendStatus(404);
         }
       })  
-    app.get('/webhook', (req, res) => {
+    app.get('/webhook/messenger', (req, res) => {
         let mode = req.query['hub.mode'];
         let token = req.query['hub.verify_token'];
         let challenge = req.query['hub.challenge'];
