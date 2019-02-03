@@ -5,7 +5,6 @@ const http = require('http');
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
-const public_dut = require('./modules/public_dut.js');
 const app = express();
 const PORT = process.env.PORT || 5000
 const server = http.createServer(app);

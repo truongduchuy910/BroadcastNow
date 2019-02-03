@@ -22,7 +22,6 @@ function insertDocs(dbName, colName, docs) {
 function deleteDocs(dbName, colName, query) {
   client.db(dbName).collection(colName).deleteOne(query);
 }
-module.exports.addUser = addUser;
 module.exports.findDocs = findDocs;
 module.exports.insertDocs = insertDocs;
 module.exports.deleteDocs = deleteDocs;
