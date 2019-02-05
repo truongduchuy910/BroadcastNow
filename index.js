@@ -5,6 +5,11 @@ const http = require('http');
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
+
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash    = require('connect-flash');
+
 const app = express();
 const PORT = process.env.PORT || 5000
 const server = http.createServer(app);
@@ -21,5 +26,6 @@ app.set('view engine', 'ejs')
 require('./routers/functions')(app);
 require('./routers/messenger')(app);
 require('./routers/pages')(app);
+require('./routers/authentication')(app);
 app.listen(PORT, () => console.log(`Listening on ${ PORT } `))
 
