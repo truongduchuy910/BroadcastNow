@@ -46,11 +46,11 @@ module.exports = function(app, passport) {
         }
     },
     function (req, res) {
-        if (req.data.user.verifyCode == "done") {
+        if (req.user.verifyCode == "done") {
             res.render('../views/pages/dashboard.js')
         } else {
             res.render('../views/pages/verify.ejs', {
-                user: req.data.user
+                user: req.user
             })
         }
     }
