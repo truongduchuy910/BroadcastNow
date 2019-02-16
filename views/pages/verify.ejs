@@ -1,0 +1,65 @@
+<!-- views/profile.ejs -->
+<!doctype html>
+<html>
+<head>
+    <% include ../partials/header.ejs %>
+</head>
+<body>
+    <div class="container">
+        <section>
+                <div class=" clearfix">
+                    <h2 class="float-left">Xin chào, <%= user.local.email %></h2> 
+                    <a href="/logout" class="btn btn-outline-primary float-right" >Đăng Xuất</a>
+                </div>
+            
+
+            <hr/>
+            <div class="alert alert-info">
+                <b>Để hoàn tất</b> gửi nội dung bên dưới vào trang <a href="https://m.me/DUT.BroadcastNow" target="blank">BroadcastNow</a> trên Facebook
+            </div>
+            <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <button 
+                        class="btn btn-outline-primary" 
+                        type="button" 
+                        data-container="body" 
+                        data-toggle="popover" 
+                        data-placement="bottom" 
+                        data-content="Đã sao chép"
+                        onclick="copyText()"
+                      >Sao chép</button>
+                    </div>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="" 
+                        aria-label="Example text with button addon" 
+                        aria-describedby="button-addon1" 
+                       value="verify #<%= user.verifyCode %>"
+                        id="verifyCode"
+                        readonly
+                    >
+            </div>
+            
+            <div class="card text-center">
+                <div class="card-body">
+                  <p class="card-text">Sau khi gửi thành công, mã sẽ không còn hiệu lực</p>
+                  <button class="btn btn-primary">Yêu cầu mã mới</button>
+
+                </div>
+
+            </div>    
+            <script>
+                function copyText() {
+                var sellector = document.getElementById("verifyCode");
+                sellector.select();
+                document.execCommand("copy");
+                }
+            </script>
+        </section>
+    </div>
+</body>
+<footer>
+    <% include ../partials/footer %>
+</footer>
+</html>

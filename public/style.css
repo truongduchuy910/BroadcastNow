@@ -1,18 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 body {
-    font-size: 14px ;
-    font-family: 'Roboto', sans-serif;
+    padding-top: 20px;
 
 }
-.container {
+.ps-container {
     max-width: 940px;
     margin: auto;
 }
-.panel-heading {
+.ps-panel-heading {
     text-align: center;
 }
-.boxNotification {
+.ps-boxNotification {
     background-color: #f1f0f0;
     color: rgba(0, 0, 0, 1);
     border-radius: 1.3em;
@@ -20,12 +19,12 @@ body {
     margin-bottom: 15px;
     padding: 6px 12px 6px 12px;
 }
-.date {
+.ps-date {
     border-radius: 20px;
     padding: 10px;
     padding-left: 0px;
 }
-.title {
+.ps-title {
     text-align: center;
     font-size: 24;
 }

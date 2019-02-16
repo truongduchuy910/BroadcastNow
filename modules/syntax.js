@@ -31,8 +31,11 @@ function parse(message, PSID) {
         case 'help':
         webhook.help(PSID);
         break;  
+        case 'verify':
+        var hashtag = findHashtag(message);
+        webhook.verify(PSID, hashtag);
+        break;
         default:
-            webhook.callSendAPI(PSID, "Lỗi cú pháp");
         break;
     }
 }

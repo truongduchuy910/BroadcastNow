@@ -24,8 +24,33 @@ curl -X POST -H "Content-Type: application/json" -d '{
   ...
 }' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=<PAGE_ACCESS_TOKEN>"
 
-curl -X DELETE -H "Content-Type: application/json" -d '{
-  "fields": [
-    "persistent_menu"
+curl -X DELETE -H "Content-Type: application/json" -d "{
+  \"fields\": [
+    \"persistent_menu\":[
+    ]
   ]
-}' "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
+}" "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"
+
+
+
+
+curl -X POST -H "Content-Type: application/json" -d "{
+  \"persistent_menu\":[
+    {
+      \"locale\":\"default\",
+      \"composer_input_disabled\": false,
+      \"call_to_actions\":[
+        {
+          \"title\":\"Log in\",
+          \"type\":\"postback\",
+          \"payload\": \"LOGIN\"
+        },
+        {
+          \"title\":\"Sign up\",
+          \"type\":\"postback\",
+          \"payload\": \"SIGNUP\"
+        }
+      ]
+    }
+  ]
+}" "https://graph.facebook.com/v2.6/me/messenger_profile?access_token=EAACubcIenBMBAOWKffzoa5noRFIWXC0r8GSpTKbA6vxwEg241AoHmL3sbq9g4hJZBT6sKgczKRKYoTsj0Kb1ENwH4Gd6AZBnfWUVxwANbXSZB6WW9artot9Q2PXcKyPxe21nYKDcnC5dSOnqSSOf5Hqxhf8gRliRt4f39qYhAZDZD"

@@ -3,6 +3,7 @@ var request = require('request')
 const syntax = require('./syntax.js')
 const db = require('./database.js')
 var colors = require('colors');
+var User            = require('../models/users');
 
 function handle(sender_psid, webhook_event){
   if (webhook_event.message) {
@@ -42,11 +43,43 @@ function handleMessage(sender_psid, received_message) {
   
 function handlePostback(sender_psid, received_postback) {
   let response;
-      let payload = received_postback.payload;
-    if (payload === 'yes') {
-    response = { "text": "Thanks!" }
-  } else if (payload === 'no') {
-    response = { "text": "Oops, try sending another image." }
+  let payload = received_postback.payload;
+  switch (payload) {
+    case 'SIGNUP':
+    response = {
+      "attachment":{
+        "type":"template",
+        "payload":{
+          "template_type":"button",
+          "text":"Đăng Ký",
+          "buttons":[
+            {
+              "type": "account_link",
+              "url": "http://www.broadcastnow.club/signup/facebook"
+            }
+          ]
+        }
+      }
+    }
+    break;
+    case 'LOGIN':
+    response = {
+      "attachment":{
+        "type":"template",
+        "payload":{
+          "template_type":"button",
+          "text":"Đăng Nhập để sử dụng trên Website",
+          "buttons":[
+            {
+              "type": "web_url",
+              "url": "http://www.broadcastnow.club/login",
+              "title": "Đăng Nhập",
+            }
+          ]
+        }
+      }
+    }
+    break;
   }
   callSendAPI(sender_psid, response);
 }
@@ -290,6 +323,24 @@ function sendHashtag(PSID, Hashtag, Content) {
 }
 //Support Functions
 //------------------------------------------------------------------------------
+function verify(PSID, Hashtag) {
+  if (!Hashtag || Hashtag == "done") return;
+  request({
+    uri: "https://graph.facebook.com/" + PSID,
+    qs: { 
+      fields: 'first_name,last_name,profile_pic',
+      access_token: process.env.PAGE_ACCESS_TOKEN },
+    method: "GET",
+  }, (err, res, docs) => {
+    if (docs) {
+      var body = JSON.parse(docs);
+      User.findOneAndUpdate({ 'verifyCode' :  Hashtag}, {$set: {PSID: PSID, first_name: body.first_name, last_name: body.last_name, profile_pic: body.profile_pic, verifyCode: "done"}}, function(req, res){}); 
+    } else {
+    }
+  }); 
+  
+}
+//------------------------------------------------------------------------------
 function callSendAPI(sender_psid, response) {
   let request_body = {
     recipient: {
@@ -299,6 +350,7 @@ function callSendAPI(sender_psid, response) {
       text: response
     }
   };
+  //------------------------------------------------------------------------------
   // Send the HTTP request to the Messenger Platform
   request({
     uri: "https://graph.facebook.com/v2.6/me/messages",
@@ -312,8 +364,29 @@ function callSendAPI(sender_psid, response) {
   }); 
   
 }
+
+function getPSID(account_linking_token) {
+  //------------------------------------------------------------------------------
+  // Send the HTTP request to the Messenger Platform
+  request({
+    uri: "https://graph.facebook.com/v2.6/me",
+    qs: { 
+      fields: recipient,
+      access_token: process.env.PAGE_ACCESS_TOKEN,
+      account_linking_token: account_linking_token
+    },
+    method: "GET",
+  }, (err, res, body) => {
+    if (!err) {
+      return body.recipient;
+    } else {
+      return null;
+    }
+  }); 
+}
 module.exports.handle = handle;
 module.exports.callSendAPI = callSendAPI;
+module.exports.getPSID = getPSID;
 module.exports.creatHashtag = creatHashtag;
 module.exports.followHashtag = followHashtag;
 module.exports.unfollowHashtag = unfollowHashtag;
@@ -322,3 +395,4 @@ module.exports.deleteHashtag = deleteHashtag;
 module.exports.mycreate = mycreate;
 module.exports.myfollow = myfollow;
 module.exports.help = help;
+module.exports.verify = verify;

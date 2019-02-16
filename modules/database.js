@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-const uri = process.env.uri;
+const uri = process.env.MessengerURI;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
 client.connect(function(err) {
