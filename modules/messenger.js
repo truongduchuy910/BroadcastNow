@@ -301,8 +301,12 @@ function sendHashtag(PSID, Hashtag, Content) {
             }
           }, (err, res, body) => {
             if (!err) {
-              history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "thành công, ID sự kiện: " + body.broadcast_id); 
+              history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "thành công, ID sự kiện: " + body.broadcast_id);     
               callSendAPI(PSID, "Gửi thành công");
+              db.insertDocs("Messenger", "Broadcast_id", {
+                PSID: PSID,
+                id: body.broadcast_id
+              })
             } else {
               history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, Lỗi từ Messenger Flatform");
             }
