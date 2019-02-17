@@ -276,13 +276,14 @@ function sendHashtag(PSID, Hashtag, Content) {
           "messages": [
           {
             "dynamic_text": {
-              "text": "[#" + Hashtag + "]" + Content,
+              "text": "[#" + Hashtag + "] " + Content,
               "fallback_text": "OK"
             } 
           }
         ]
         }
       }, (err, res, body) => {
+        console.log(err, body);
         if (!err) {
           var message_creative_id = body.message_creative_id;
           history(PSID, "Tạo tin nhắn để phát tán", "ID tin nhắn: " + message_creative_id); 
@@ -313,10 +314,10 @@ function sendHashtag(PSID, Hashtag, Content) {
       }); 
     } else {
       if (PSID !== docs[0].PSID) {
-        history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, không có quyền gửi thẻ");
+        history(PSID, "hất bại, không có quyền gửi thẻ");
         callSendAPI(PSID, "Bạn chỉ có thể gửi tới thẻ mình đã tạo");
       } else {
-        history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, Lỗi từ Messenger Flatform");  
+        history(PSID, "Thất bại, Lỗi từ Messenger Flatform");  
       };
     }
   })
