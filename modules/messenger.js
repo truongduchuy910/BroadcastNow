@@ -24,7 +24,7 @@ function handleMessage(sender_psid, received_message) {
         },
         method: "GET",
       }, (err, res, data) => {    
-        var body = JSON.parse(data).data
+        var body = JSON.parse(data)
         var userID = {
           PSID: sender_psid,
           first_name: body.first_name,
@@ -339,7 +339,7 @@ function verify(PSID, Hashtag) {
     method: "GET",
   }, (err, res, docs) => {
     if (docs) {
-      var body = JSON.parse(docs).data;
+      var body = JSON.parse(docs);
       User.findOneAndUpdate({ 'verifyCode' :  Hashtag}, {$set: {
         PSID: PSID, 
         first_name: body.first_name, 
