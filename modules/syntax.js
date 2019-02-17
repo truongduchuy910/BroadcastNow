@@ -4,7 +4,7 @@ function parse(message, PSID) {
     switch(expression) {
         case 'create':
         var hashtag = findHashtag(message);
-        if (hashtag) webhook.creatHashtag(PSID, hashtag);
+        if (hashtag) webhook.createHashtag(PSID, hashtag);
         break;
         case 'follow':
         var hashtag = findHashtag(message);

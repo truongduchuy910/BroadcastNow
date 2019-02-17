@@ -2,7 +2,10 @@ Subscribe
 curl -X GET "localhost:5000/webhook?hub.verify_token=truongduc.huy&hub.challenge=CHALLENGE_ACCEPTED&hub.mode=subscribe"
 
 Mesenger Recive
-curl -H "Content-Type: application/json" -X POST "localhost:5000/webhook" -d "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\"ngochuy2k\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\"create #truongduchuy\" } } ] }]}"
+curl -H "Content-Type: application/json" -X POST "localhost:5000/webhook/messenger" -d "{ \"object\":\"page\", \"entry\":[{ \"id\": \"PAGE_ID\", \"time\":1457764198246, \"messaging\":[ { \"sender\":{ \"id\":\"ngochuy2k\" }, \"recipient\":{ \"id\":\"PAGE_ID\" }, \"timestamp\":1457764197627, \"message\":{ \"mid\":\"mid.1457764197618:41d102a3e1ae206a38\", \"seq\":73, \"text\":\"create #truongduchuy\" } } ] }]}"
+
+
+
 connect to mongoDB
 mongo "mongodb+srv://broadcastnow-rqfev.gcp.mongodb.net/test" --username broadcastnow
 

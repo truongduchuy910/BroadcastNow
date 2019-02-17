@@ -18,8 +18,8 @@ function listFollow(PSID, callback) {
         method: "GET"
       },(err, res, body) => {
           if (!err) {
-            data = JSON.parse(body).data;
-            callback(err, data)
+            data = JSON.parse(body);
+            callback(err, data.data)
           } 
         }
       )

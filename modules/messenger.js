@@ -19,20 +19,26 @@ function handleMessage(sender_psid, received_message) {
       request({
         uri: "https://graph.facebook.com/" + sender_psid,
         qs: { 
-          "access_token": process.env.PAGE_ACCESS_TOKEN,
-          "fields": [first_name,last_name,profile_pi]
+          access_token: process.env.PAGE_ACCESS_TOKEN,
+          fields: 'first_name,last_name,profile_pic'
         },
         method: "GET",
-      }, (err, res, data) => {    
-        var body = JSON.parse(data)
-        var userID = {
-          PSID: sender_psid,
-          first_name: body.first_name,
-          last_name: body.last_name,
-          profile_pic: body.profile_pic
+      }, (err, res, body) => {    
+        var data = JSON.parse(body);
+        if (data.first_name) {          
+          var userID = {
+            PSID: sender_psid,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            profile_pic: data.profile_pic
+          }
+          db.insertDocs('Messenger', 'PSIDs', userID);
+          console.log('Thêm người dùng: ', sender_psid);
+        } else {
+          console.log('không bắt được dữ liệu từ PSID trong hàm handleMessage');
+          console.log('err: ', err);
+          console.log('body: ', body);
         }
-        insertDocs('Messenger', 'PSIDs', userID);
-        console.log('Thêm người dùng: ', sender_psid);
       }); 
     }
   })
@@ -97,7 +103,7 @@ function history(PSID, action, status) {
 //Những hàm dưới đây được gọi bởi module Syntax khi đã phân tích cú pháp
 //------------------------------------------------------------------------------
 // Trước khi thực hiện đăng ký Label Messenger với Facebook, không cần kiểm tra bởi vì nếu thẻ đã tồn tại thì Facebook sẽ báo lỗi
-function creatHashtag (PSID, Hashtag) {
+function createHashtag (PSID, Hashtag) {
   var request_body = {    
     "name": Hashtag  
   };
@@ -106,11 +112,11 @@ function creatHashtag (PSID, Hashtag) {
     qs: { "access_token": process.env.PAGE_ACCESS_TOKEN },
     method: "POST",
     json: request_body
-  }, (err, res, body) => {
-    if (body.id) {
+  }, (err, res, data) => {
+    if (!data.error) { 
       var content = {
         name: Hashtag,
-        ID: body.id,
+        ID: data.id,
         PSID: PSID
       }
       db.insertDocs("Messenger", "Hashtags", content);
@@ -118,7 +124,12 @@ function creatHashtag (PSID, Hashtag) {
       history(PSID, "tạo thẻ #" + Hashtag, "thành công");      
     } else {
       callSendAPI(PSID, 'Thẻ bạn tạo bị trùng trên hệ thống');
-      history(PSID, "tạo thẻ #" + Hashtag, "thất bại, thẻ bị trùng");    
+      history(PSID, "tạo thẻ #" + Hashtag, "Thẻ bị trùng", "Thất bại");   
+      if (err) {
+        console.log('không khởi tạo thẻ được trong createHashtag');
+        console.log('err: ', err);
+        console.log('body: ', body);
+      }
     }
   }); 
 };
@@ -136,18 +147,23 @@ function followHashtag(PSID, Hashtag) {
         qs: { "access_token": process.env.PAGE_ACCESS_TOKEN },
         method: "POST",
         json: request_body
-      }, (err, res, body) => {
-        if (!err) {
+      }, (err, res, data) => {
+        if (!data.error) {          
           callSendAPI(PSID, 'Đăng ký nhận thông báo từ #' + Hashtag + ' thành công');
           history(PSID, "đăng ký #" + Hashtag, "thành công");    
         } else {
           callSendAPI(PSID, 'Lỗi: ', err);
-          history(PSID, "đăng ký #" + Hashtag, "thất bại, lỗi từ Mesenger Flatform");    
+          history(PSID, "đăng ký #" + Hashtag, "Lỗi tại followHashtag", "Thất bại");   
+          if (err) {
+            console.log('Không thẻ đăng ký thẻ tại followHashtag');
+            console.log('err: ', err);
+            console.log('body: ', body);
+          } 
         }
       });
     } else {
       callSendAPI(PSID, 'Thẻ không tồn tại trên hệ thống');
-      history(PSID, "đăng ký #" + Hashtag, "thất bại, thẻ đã tồn tại"); 
+      history(PSID, "đăng ký #" + Hashtag, "Thẻ đã tồn tại", "Thất bại"); 
     }
   }); 
 }
@@ -165,17 +181,23 @@ function unfollowHashtag(PSID, Hashtag) {
         },
         method: "DELETE"
       }, (err, res, body) => {
-        if (!err) {
+        var data = JSON.parse(body);
+        if (!data.error) {
           callSendAPI(PSID, 'Hủy nhận thông báo từ #' + Hashtag + ' thành công');
           history(PSID, "hủy nhận #" + Hashtag, "thành công"); 
         } else {
           callSendAPI(PSID, 'Lỗi: ', err);
-          history(PSID, "hủy nhận #" + Hashtag, "thất bại, lỗi từ Mesenger Flatform"); 
+          history(PSID, "hủy nhận #" + Hashtag, "Lỗi tại unfollow", "Thất bại"); 
+          if (err) {
+            console.log('Không thẻ hủy đăng ký thẻ tại unfollowHashtag');
+            console.log('err: ', err);
+            console.log('body: ', body);
+          } 
         }
       }); 
     } else {
       callSendAPI(PSID, 'Thẻ bạn hủy nhận thông báo không tồn tại trên hệ thống, vui lòng kiểm tra lại cú pháp');
-      history(PSID, "hủy nhận #" + Hashtag, "thất bại, thẻ không tồn tại"); 
+      history(PSID, "hủy nhận #" + Hashtag, "Thẻ không tồn tại", "Thất bại"); 
     }
   })
 }
@@ -190,17 +212,22 @@ function myfollow(PSID) {
     },
     method: "GET"
   },(err, res, body) => {
-      if (!err) {
-        data = JSON.parse(body).data;
+    var data = JSON.parse(body);
+    if (!data.error) {
         var text = 'Các thẻ bạn đã đăng ký: ';
-        data.forEach(element => {
+        data.data.forEach(element => {
           text += "\n#" + element.name;
         });
         callSendAPI(PSID, text);
         history(PSID, "xem thẻ đã đăng ký" , "thành công"); 
       } else {
         callSendAPI(PSID, 'Yêu cầu không thành công. Lỗi: ', err);
-        history(PSID, "xem thẻ đã đăng ký", "thất bại, lỗi từ Mesenger Flatform"); 
+        history(PSID, "xem thẻ đã đăng ký", "thất bại, tại myfollow"); 
+        if (err) {
+          console.log('lỗi tại myfollow');
+          console.log('err: ', err);
+          console.log('body: ', body);
+        } 
       }
     }
   )
@@ -216,22 +243,28 @@ function deleteHashtag(PSID, Hashtag) {
           qs: {"access_token": process.env.PAGE_ACCESS_TOKEN},
           method: "DELETE"
         }, (err, res, body) => {
-          if (!err) {
+          var data = JSON.parse(body);
+          if (data) {
             db.deleteDocs("Messenger", "Hashtags", {name: Hashtag});
             callSendAPI(PSID, 'Xóa thẻ #' + Hashtag + ' thành công');
             history(PSID, "Xóa thẻ #" + Hashtag, "thành công"); 
           } else {
             callSendAPI(PSID, 'Lỗi: ', err);
-            history(PSID, "hủy nhận #" + Hashtag, "thất bại, lỗi từ Mesenger Flatform"); 
+            history(PSID, "xóa thẻ #" + Hashtag, "Lỗi tại deleteHashtag", "Thất bại"); 
+            if (err) {
+              console.log('lỗi tại deleteHashtag');
+              console.log('err: ', err);
+              console.log('body: ', body);
+            } 
           }
         })
       } else {
         callSendAPI(PSID, 'Không thẻ xóa thẻ này, bạn chỉ được xóa những thẻ bạn đã tạo');
-        history(PSID, "hủy nhận #" + Hashtag, "thất bại, người dùng không có quyền xóa thẻ"); 
+        history(PSID, "xóa thẻ #" + Hashtag, "Người dùng không có quyền xóa thẻ", "Thất bại"); 
       }
     } else {
       callSendAPI(PSID, 'Bạn đang yêu cầu xóa một thẻ không tồn tại trên hệ thống');
-      history(PSID, "hủy nhận #" + Hashtag, "thất bại, thẻ không tồn tại"); 
+      history(PSID, "hủy nhận #" + Hashtag, "Thẻ không tồn tại", "Thất bại"); 
     }
   });
 }
@@ -247,7 +280,7 @@ function mycreate(PSID) {
       history(PSID, "xem thẻ đã tạo", "thành công"); 
     } else {
       callSendAPI(PSID, 'Bạn chưa tạo thẻ nào cả');
-      history(PSID, "xem thẻ đã tạo", "thất bại, không có thẻ nào được tạo"); 
+      history(PSID, "xem thẻ đã tạo", "Không có thẻ nào được tạo", "Thành công"); 
     }
   });
 }
@@ -259,7 +292,7 @@ function help(PSID) {
       history(PSID, "xem hướng dẫn", "thành công"); 
     } else {
       callSendAPI(PSID, "Lỗi");
-      history(PSID, "xem hướng dẫn", " bất bại, lỗi khi lấy dữ liệu"); 
+      history(PSID, "xem hướng dẫn", " Lỗi khi lấy dữ liệu"); 
     }
   })
 }
@@ -267,63 +300,73 @@ function help(PSID) {
 //Trước khi gửi, kiểm tra xem PSID có quyền gửi hay không
 function sendHashtag(PSID, Hashtag, Content) {
   db.findDocs("Messenger", "Hashtags", {"name":Hashtag}, function( error, docs) {
-    if (docs && PSID == docs[0].PSID) {
-      //Tạo một tin nhắn Broadcast để chuẩn bị gửi
-      request({
-        uri: "https://graph.facebook.com/v2.11/me/message_creatives",
-        qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
-        method: "POST",
-        json: {
-          "messages": [
-          {
-            "dynamic_text": {
-              "text": "[#" + Hashtag + "] " + Content,
-              "fallback_text": "OK"
-            } 
+    if (docs[0]) {
+      if (PSID == docs[0].PSID) {
+        //Tạo một tin nhắn Broadcast để chuẩn bị gửi
+        request({
+          uri: "https://graph.facebook.com/v2.11/me/message_creatives",
+          qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
+          method: "POST",
+          json: {
+            "messages": [
+            {
+              "dynamic_text": {
+                "text": "[#" + Hashtag + "] " + Content,
+                "fallback_text": "OK"
+              } 
+            }
+          ]
           }
-        ]
-        }
-      }, (err, res, body) => {
-        console.log(err, body);
-        if (!err) {
-          var message_creative_id = body.message_creative_id;
-          history(PSID, "Tạo tin nhắn để phát tán", "ID tin nhắn: " + message_creative_id); 
-          callSendAPI(PSID, "Đang chuẩn bị để gửi");
-          request({
-            uri: "https://graph.facebook.com/v2.11/me/broadcast_messages",
-            qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
-            method: "POST",
-            json: {    
-              "message_creative_id": message_creative_id,
-              "custom_label_id": docs[0].ID,
-              "notification_type": "REGULAR",
-              "messaging_type": "MESSAGE_TAG",
-              "tag": "NON_PROMOTIONAL_SUBSCRIPTION"
-            }
-          }, (err, res, body) => {
-            if (!err) {
-              history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "thành công, ID sự kiện: " + body.broadcast_id);     
-              callSendAPI(PSID, "Gửi thành công");
-              db.insertDocs("Messenger", "Broadcast_id", {
-                PSID: PSID,
-                id: body.broadcast_id
-              })
-            } else {
-              history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, Lỗi từ Messenger Flatform");
-            }
-          }); 
-    
+        }, (err, res, data) => {
+          if (data) {
+            var message_creative_id = data.message_creative_id;
+            history(PSID, "Tạo tin nhắn để phát tán", "ID tin nhắn: " + message_creative_id); 
+            callSendAPI(PSID, "Đang chuẩn bị để gửi");
+            request({
+              uri: "https://graph.facebook.com/v2.11/me/broadcast_messages",
+              qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
+              method: "POST",
+              json: {    
+                "message_creative_id": message_creative_id,
+                "custom_label_id": docs[0].ID,
+                "notification_type": "REGULAR",
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION"
+              }
+            }, (err, res, data) => {
+                if (data) {
+                history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "thành công, ID sự kiện: " + data.broadcast_id);     
+                callSendAPI(PSID, "Gửi thành công");
+                db.insertDocs("Messenger", "Broadcast_id", {
+                  PSID: PSID,
+                  id: data.broadcast_id
+                })
+              } else {
+                history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, lỗi tại sendHashtag, không thể gửi tin nhắn Broadcast");
+                if (err) {
+                  console.log('lỗi tại sendHashtag');
+                  console.log('err: ', err);
+                  console.log('body: ', body);
+                } 
+              }
+            });     
         } else {
-          history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, Lỗi từ Messenger Flatform");  
+          history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, lỗi tại sendHashtag, không thể tạo tin nhắn Broadcast");   
+          if (err) {
+            console.log('lỗi tại sendHashtag');
+            console.log('err: ', err);
+            console.log('body: ', body);
+          } 
         }
       }); 
-    } else {
-      if (PSID !== docs[0].PSID) {
-        history(PSID, "Thất bại, không có quyền gửi thẻ");
-        callSendAPI(PSID, "Bạn chỉ có thể gửi tới thẻ mình đã tạo");
       } else {
-        history(PSID, "Thất bại, Lỗi từ Messenger Flatform");  
-      };
+        history(PSID, "Không có quyền gửi thẻ", "Thất bại");
+        callSendAPI(PSID, "Bạn không có quyền gửi thẻ này. Bạn chỉ có thể gửi tới thẻ mình đã tạo");
+      }
+    }
+    else {
+      history(PSID, "Gửi một thẻ không tồn tại",  "Thất bại");
+      callSendAPI(PSID, "Thẻ này chưa tồn tại. Bạn chỉ có thể gửi tới thẻ mình đã tạo");
     }
   })
 }
@@ -337,19 +380,31 @@ function verify(PSID, Hashtag) {
       fields: 'first_name,last_name,profile_pic',
       access_token: process.env.PAGE_ACCESS_TOKEN },
     method: "GET",
-  }, (err, res, docs) => {
-    if (docs) {
-      var body = JSON.parse(docs);
-      User.findOneAndUpdate({ 'verifyCode' :  Hashtag}, {$set: {
-        PSID: PSID, 
-        first_name: body.first_name, 
-        last_name: body.last_name, 
-        profile_pic: body.profile_pic, 
-        verifyCode: "done"
-      }}, function(err, docs){
-        callSendAPI(PSID, 'liên kết thành công với tài khoản: ' + docs[0].local.email)
-      }); 
+  }, (err, res, data) => {
+    if (!data.error) {
+      User.findOneAndUpdate(
+        { 'verifyCode' :  Hashtag}, 
+        {$set: {
+          PSID: PSID, 
+          first_name: data.first_name, 
+          last_name: data.last_name, 
+          profile_pic: data.profile_pic, 
+          verifyCode: "done"
+        }}, 
+        function(err, docs) {
+          if (docs) {
+            callSendAPI(PSID, 'liên kết thành công với tài khoản: ' + docs.local.email);
+            history(PSID, "xác minh tài khoản", "Thành công");
+          } else {
+            callSendAPI(PSID, 'liên kết thất bại với' + data.first_name);
+            history(PSID, "xác minh tài khoản", "Thất bại");
+          }
+        }
+      ); 
     } else {
+        console.log('lỗi tại verify');
+        console.log('err: ', err);
+        console.log('body: ', body);
     }
   }); 
   
@@ -379,29 +434,9 @@ function callSendAPI(sender_psid, response) {
   
 }
 
-function getPSID(account_linking_token) {
-  //------------------------------------------------------------------------------
-  // Send the HTTP request to the Messenger Platform
-  request({
-    uri: "https://graph.facebook.com/v2.6/me",
-    qs: { 
-      fields: recipient,
-      access_token: process.env.PAGE_ACCESS_TOKEN,
-      account_linking_token: account_linking_token
-    },
-    method: "GET",
-  }, (err, res, body) => {
-    if (!err) {
-      return body.recipient;
-    } else {
-      return null;
-    }
-  }); 
-}
 module.exports.handle = handle;
 module.exports.callSendAPI = callSendAPI;
-module.exports.getPSID = getPSID;
-module.exports.creatHashtag = creatHashtag;
+module.exports.createHashtag = createHashtag;
 module.exports.followHashtag = followHashtag;
 module.exports.unfollowHashtag = unfollowHashtag;
 module.exports.sendHashtag = sendHashtag;
