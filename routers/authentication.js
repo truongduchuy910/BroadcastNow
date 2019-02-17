@@ -47,7 +47,7 @@ module.exports = function(app, passport) {
     },
     function (req, res) {
         if (req.user.verifyCode == "done") {
-            res.render('../views/pages/dashboard.js')
+            res.render('../views/pages/login.ejs')
         } else {
             res.render('../views/pages/verify.ejs', {
                 user: req.user
