@@ -318,7 +318,7 @@ function sendHashtag(PSID, Hashtag, Content) {
       }); 
     } else {
       if (PSID !== docs[0].PSID) {
-        history(PSID, "hất bại, không có quyền gửi thẻ");
+        history(PSID, "Thất bại, không có quyền gửi thẻ");
         callSendAPI(PSID, "Bạn chỉ có thể gửi tới thẻ mình đã tạo");
       } else {
         history(PSID, "Thất bại, Lỗi từ Messenger Flatform");  
@@ -339,7 +339,15 @@ function verify(PSID, Hashtag) {
   }, (err, res, docs) => {
     if (docs) {
       var body = JSON.parse(docs);
-      User.findOneAndUpdate({ 'verifyCode' :  Hashtag}, {$set: {PSID: PSID, first_name: body.first_name, last_name: body.last_name, profile_pic: body.profile_pic, verifyCode: "done"}}, function(req, res){}); 
+      User.findOneAndUpdate({ 'verifyCode' :  Hashtag}, {$set: {
+        PSID: PSID, 
+        first_name: body.first_name, 
+        last_name: body.last_name, 
+        profile_pic: body.profile_pic, 
+        verifyCode: "done"
+      }}, function(err, docs){
+        callSendAPI(PSID, 'liên kết thành công với tài khoản: ' + docs[0].local.email)
+      }); 
     } else {
     }
   }); 
