@@ -380,7 +380,9 @@ function verify(PSID, Hashtag) {
       fields: 'first_name,last_name,profile_pic',
       access_token: process.env.PAGE_ACCESS_TOKEN },
     method: "GET",
-  }, (err, res, data) => {
+  }, (err, res, body) => {
+    var data = JSON.parse(body);
+    console.log(data);
     if (!data.error) {
       User.findOneAndUpdate(
         { 'verifyCode' :  Hashtag}, 
@@ -396,7 +398,7 @@ function verify(PSID, Hashtag) {
             callSendAPI(PSID, 'liên kết thành công với tài khoản: ' + docs.local.email);
             history(PSID, "xác minh tài khoản", "Thành công");
           } else {
-            callSendAPI(PSID, 'liên kết thất bại với' + data.first_name);
+            callSendAPI(PSID, 'liên kết thất bại với: ' + data.first_name);
             history(PSID, "xác minh tài khoản", "Thất bại");
           }
         }
