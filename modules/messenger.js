@@ -321,17 +321,14 @@ function sendHashtag(PSID, Hashtag, Content) {
           if (data) {
             var message_creative_id = data.message_creative_id;
             history(PSID, "Tạo tin nhắn để phát tán", "ID tin nhắn: " + message_creative_id); 
-            callSendAPI(PSID, "Đang chuẩn bị để gửi");
+            callSendAPI(PSID, "Đang chuẩn bị để gửi...");
             request({
               uri: "https://graph.facebook.com/v2.11/me/broadcast_messages",
               qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
               method: "POST",
               json: {    
                 "message_creative_id": message_creative_id,
-                "custom_label_id": docs[0].ID,
-                "notification_type": "REGULAR",
-                "messaging_type": "MESSAGE_TAG",
-                "tag": "NON_PROMOTIONAL_SUBSCRIPTION"
+                "custom_label_id": docs[0].ID
               }
             }, (err, res, data) => {
                 if (data) {
