@@ -117,7 +117,7 @@ function createHashtag (PSID, Hashtag) {
       var content = {
         name: Hashtag,
         ID: data.id,
-        PSID: PSID
+        PSID: [PSID]
       }
       db.insertDocs("Messenger", "Hashtags", content);
       callSendAPI(PSID, 'Tạo thẻ #' + Hashtag + ' thành công');
@@ -301,7 +301,13 @@ function help(PSID) {
 function sendHashtag(PSID, Hashtag, Content) {
   db.findDocs("Messenger", "Hashtags", {"name":Hashtag}, function( error, docs) {
     if (docs[0]) {
-      if (PSID == docs[0].PSID) {
+      var PSIDs;
+      if (typeof(docs[0].PSID) == "string") {
+        PSIDs = [docs[0].PSID];
+      } else {
+        PSIDs = docs[0].PSID;
+      }
+      if (inArray(PSID, PSIDs)) {
         //Tạo một tin nhắn Broadcast để chuẩn bị gửi
         request({
           uri: "https://graph.facebook.com/v2.11/me/message_creatives",
@@ -334,9 +340,11 @@ function sendHashtag(PSID, Hashtag, Content) {
                 if (data) {
                 history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "thành công, ID sự kiện: " + data.broadcast_id);     
                 callSendAPI(PSID, "Gửi thành công");
-                db.insertDocs("Messenger", "Broadcast_id", {
+                db.insertDocs("Messenger", "Broadcast_Message", {
                   PSID: PSID,
-                  id: data.broadcast_id
+                  id: data.broadcast_id,
+                  Hashtag: Hashtag,
+                  Content: Content
                 })
               } else {
                 history(PSID, "Phát tán tin nhắn có ID: " + message_creative_id, "Thất bại, lỗi tại sendHashtag, không thể gửi tin nhắn Broadcast");
@@ -368,6 +376,13 @@ function sendHashtag(PSID, Hashtag, Content) {
   })
 }
 //Support Functions
+function inArray(item, array) {
+  var bool = false;
+  array.forEach(element => {
+    if (item == element) bool = true;
+  })
+  return bool;
+}
 //------------------------------------------------------------------------------
 function verify(PSID, Hashtag) {
   if (!Hashtag || Hashtag == "done") return;
