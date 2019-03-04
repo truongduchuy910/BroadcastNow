@@ -1,0 +1,10 @@
+{
+    "version": 20160513,
+    "zip-command": "zip Loa_Loa.zip Loa_Loa\/app.json Loa_Loa\/entities\/*.json Loa_Loa\/expressions\/*.json",
+    "data": {
+        "name": "Loa_Loa",
+        "description": "",
+        "lang": "vi",
+        "timezone": "Asia\/Ho_Chi_Minh"
+    }
+}

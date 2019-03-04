@@ -1,7 +1,7 @@
 // config/passport.js
 var LocalStrategy   = require('passport-local').Strategy;
 var User            = require('../models/users');
-var db              = require('../modules/database');
+var db              = require('../modules/mongodb_API');
 var request = require('request')
 
 module.exports = function(passport) {

@@ -1,26 +1,19 @@
 //nodemon --exec "heroku local" --signal SIGTERM
+//https://rotten-dolphin-40.localtunnel.me
 'use strict';
 const logger = require('morgan');
 const http = require('http');
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
-
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var session      = require('express-session');
-
 const app = express();
 const PORT = process.env.PORT || 5000
-const server = http.createServer(app);
-
-
-mongoose.connect(process.env.uri, {useNewUrlParser: true});
-
+const server = http.createServer(app);mongoose.connect(process.env.uri, {useNewUrlParser: true});
 require('./configs/passport')(passport); // 
-
-
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
@@ -35,10 +28,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); 
 
-
-require('./routers/functions')(app);
-require('./routers/messenger')(app);
+require('./routers/messenger_webhook')(app);
 require('./routers/pages')(app);
+require('./API/API')(app);
 require('./routers/authentication')(app, passport);
+
+
+
+
+
+
 app.listen(PORT, () => console.log(`Listening on ${ PORT } `))
 

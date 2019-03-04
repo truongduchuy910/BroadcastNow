@@ -1,0 +1,23 @@
+{
+    "data": {
+        "lookups": [
+            "trait"
+        ],
+        "name": "create_hashtag",
+        "lang": "vi",
+        "id": "create_hashtag",
+        "doc": "User-defined entity",
+        "builtin": false,
+        "values": [
+            {
+                "value": "create",
+                "expressions": [
+                    "m\u1edf th\u1ebb",
+                    "m\u1edf",
+                    "t\u1ea1o th\u1ebb",
+                    "t\u1ea1o"
+                ]
+            }
+        ]
+    }
+}

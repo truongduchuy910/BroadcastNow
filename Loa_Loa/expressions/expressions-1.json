@@ -1,0 +1,51 @@
+{
+    "data": [
+        {
+            "text": "C\u00e1c th\u1ebb \u0111\u00e3 t\u1ea1o",
+            "entities": []
+        },
+        {
+            "text": "create #15.Nh22A",
+            "entities": []
+        },
+        {
+            "text": "create #15.Nh84",
+            "entities": []
+        },
+        {
+            "text": "create #16.Nh83A",
+            "entities": []
+        },
+        {
+            "text": "create #15.Nh83",
+            "entities": [
+                {
+                    "entity": "create_hashtag",
+                    "value": "\"create\""
+                }
+            ]
+        },
+        {
+            "text": "create #hashtag",
+            "entities": [
+                {
+                    "entity": "create_hashtag",
+                    "value": "\"create\""
+                }
+            ]
+        },
+        {
+            "text": "create #something",
+            "entities": [
+                {
+                    "entity": "create_hashtag",
+                    "value": "\"create\""
+                }
+            ]
+        },
+        {
+            "text": "create #hashtags",
+            "entities": []
+        }
+    ]
+}

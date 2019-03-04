@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <% include ../partials/header.ejs %>
+    </head>
+    <body>
+        <div class="fixed-bottom">
+            <div class="container">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Viết tin nhắn..." aria-label="" aria-describedby="Viết tin nhắn..." id="input_message">
+                        <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="button" onclick="button_click()">Gửi</button>
+                    </div>
+            </div>
+        </div>
+        
+
+
+
+
+            <script>
+                
+                var input = document.getElementById("input_message");
+                input.addEventListener("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault();   
+                        button_click();             
+                    }
+                });
+
+                function button_click() {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open('POST', "/webhook/messenger", true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    var request = { 
+                        object:"page", 
+                        entry:[
+                            { 
+                                id: "191786431454227", 
+                                time:1457764198246, 
+                                messaging:[ 
+                                    { 
+                                        sender: { 
+                                            id:"1964519013637071" 
+                                        }, 
+                                        recipient: { 
+                                            id:"191786431454227" 
+                                        }, 
+                                        timestamp:1457764197627, 
+                                        message: { 
+                                            mid:"mid.1457764197618:41d102a3e1ae206a38", 
+                                            seq:73, 
+                                            text: input.value
+                                        } 
+                                    } 
+                                ] 
+                            }
+                        ]
+                    };
+                    xhttp.send(JSON.stringify(request));
+                    xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    }
+                };
+                }
+            </script>
+        </div>
+    </body>
+    <footer>
+            <% include ../partials/footer %>
+    </footer>
+</html>
