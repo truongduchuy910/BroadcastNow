@@ -19,7 +19,9 @@ module.exports = function(app){
     app.get('/test', function (req, res) {
         res.render('../views/pages/test.ejs');
     })
-
+    app.get('/tenaiti', function(req, res) {
+        res.render('../views/pages/tenaiti.ejs', {});
+    })
 
     var request     = require('request')
     app.get('/functions', function(req, res) {
