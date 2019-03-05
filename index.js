@@ -1,5 +1,4 @@
 //nodemon --exec "heroku local" --signal SIGTERM
-//https://rotten-dolphin-40.localtunnel.me
 'use strict';
 const logger = require('morgan');
 const http = require('http');

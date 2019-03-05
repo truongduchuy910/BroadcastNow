@@ -19,9 +19,11 @@ function handle_webhook_event(entry){
 function messenger_command (PSID, command) {  
   if (command) { 
     wit.parse(command, function (error, docs) {
-      var request = docs.entities.request[0].value;
-      console.log('request ' + request);
+      console.log(docs.entities);
 
+      var request;
+      console.log(docs.entities.request[0].confidence);
+      if (docs.entities.request) if (docs.entities.request[0].confidence > 0.77)  request = docs.entities.request[0].value;
       switch (request) {
         
         case "list_create": 
@@ -43,16 +45,24 @@ function messenger_command (PSID, command) {
         break;
         case "list_follow": 
         ms.retrieve_PSID_label(PSID, function(error, docs) {
+          console.log('retrieve_PSID_label');
           console.log(docs); 
-          ms.send(PSID, ms_moles.list_follow(docs.data), function (error, docs) {
-            if (error) console.log("error: ", error);                        
-          });        })  
+          if (docs.data[0]) {
+            ms.send(PSID, ms_moles.list_follow(docs.data), function (error, docs) {
+                if (error) console.log("error: ", error);                        
+            });        
+            
+          } else {
+            ms.send(PSID, ms_moles.simple_message('Bạn chưa theo dõi thẻ nào cả.'), function(err, docs) {
+            })
+          }
+        });  
         break;
       }
       
-      var label = docs.entities.message_subject[0].value;
-      console.log('label ' + label);
-
+      var label;
+      if (docs.entities.label) if (docs.entities.label[0].confidence > 0.7) label = docs.entities.label[0].value;
+      console.log('label ',label);
       if (label) {
         switch (request) {
           case "add_hashtag":
@@ -91,7 +101,6 @@ function messenger_command (PSID, command) {
               })
             }
           })
-          //db.set.remove_hashtag(PSID, label);
           break;
           case "follow_hashtag":
           Label.findOne({name: label}, function(error, docs) {
