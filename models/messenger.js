@@ -23,10 +23,18 @@ function list_create(list) {
             buttons: [{
                 type: "postback",
                 title: "xóa thẻ này",
-                payload: "remove_hashtag #" + element.name                
+                payload: "remove_hashtag " + element.name                
             }]
         }
         message.attachment.payload.elements.push(item);
+    });
+    if (list.length == 1) message.attachment.payload.elements.push({
+        title:"...",            
+            buttons: [{
+                type: "postback",
+                title: "...",
+                payload: "hello"               
+            }]
     })
     return message;
 }
@@ -52,11 +60,19 @@ function list_follow(list) {
             buttons: [{
                 type: "postback",
                 title: "bỏ theo dõi",
-                payload: "unfollow_hashtag #" + element.name                
+                payload: "unfollow_hashtag " + element.name                
             }]
         }
         message.attachment.payload.elements.push(item);
     })
+    if (list.length == 1) message.attachment.payload.elements.push({
+        title:"...",            
+            buttons: [{
+                type: "postback",
+                title: "...",
+                payload: "hello"               
+            }]
+    });
     return message;
 }
 module.exports.list_follow = list_follow;

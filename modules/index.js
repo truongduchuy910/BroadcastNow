@@ -20,51 +20,45 @@ function messenger_command (PSID, command) {
   if (command) { 
     wit.parse(command, function (error, docs) {
       var request = docs.entities.request[0].value;
-      console.log(request);
-      switch (request) {
-        case "list_create": 
-        db.get.list_create(PSID, function( error, docs) {
-          // docs = [ 
-          //   { _id: '5c4cac4cb780403d8c79f1b0',
-          //   name: 'public.dut',
-          //   ID: '1865545000216094',
-          //   PSID: [ '1964519013637071', 'public.dut' ] 
-          // },
-          //   { _id: '5c68e0ad5213e1000438282e',
-          //     name: 'ngochuy2k',
-          //     ID: '1959661977496655',
-          //     PSID: '1964519013637071' 
-          //   } 
-          // ]          
+      console.log('request ' + request);
 
-          ms.send(PSID, ms_moles.list_create(docs), function (error, docs) {
-            console.log("docs: ", docs);                        
-          });
+      switch (request) {
+        
+        case "list_create": 
+        Label.find({PSID: {$all:[PSID]}}, function( error, docs) {
+          if (docs.length > 0) {
+            ms.send(PSID, ms_moles.list_create(docs), function (error, docs) {
+            });
+          } else {
+            ms.send(PSID, ms_moles.simple_message('Bạn chưa tạo thẻ nào'), function(err, docs) {
+              ms.send(PSID, ms_moles.simple_message('Bạn có thể tạo thẻ như ví dụ dưới đây'), function(err, docs) {
+                ms.send(PSID, ms_moles.simple_message('Tạo thẻ xinchaomoinguoi'), function(err, docs) {
+                })
+              });
+            });
+            
+            
+          }
         });
         break;
         case "list_follow": 
         ms.retrieve_PSID_label(PSID, function(error, docs) {
-          // docs =  { data:
-          //     [ { name: '18TCLCDT3', id: '2339017312798783' },
-          //       { name: 'public.dut', id: '1865545000216094' } ],
-          //    paging:
-          //     { cursors:
-          //        { before: '...',
-          //          after: '..' } } }  
+          console.log(docs); 
           ms.send(PSID, ms_moles.list_follow(docs.data), function (error, docs) {
             if (error) console.log("error: ", error);                        
           });        })  
         break;
       }
       
+      var label = docs.entities.message_subject[0].value;
+      console.log('label ' + label);
 
-      var label = docs.entities.label[0].value;
       if (label) {
         switch (request) {
           case "add_hashtag":
           ms.create_label(PSID, label, function(error, docs) {
             if (docs.id) {
-              ms.send(PSID, ms_moles.simple_message('Add label is sucessful!'), function(error, docs){
+              ms.send(PSID, ms_moles.simple_message('Tạo thẻ ' + label + ' thành công.'), function(error, docs){
               });
               new_label = new Label();
               new_label.name = label;
@@ -74,7 +68,7 @@ function messenger_command (PSID, command) {
                 
               })
             } else {
-              ms.send(PSID,ms_moles.simple_message(docs.error.error_user_msg),
+              ms.send(PSID,ms_moles.simple_message('thẻ này đã tồn tại, vui lòng chọn thẻ khác.'),
               function(err, docs) {
               });
             }
@@ -83,27 +77,52 @@ function messenger_command (PSID, command) {
           case "remove_hashtag":
           Label.findOne({name: label}, function(error, docs) {
             if (docs) {
-              ms.remove_label( docs.ID, function(err, docs) {
-                if (docs.success) {
-                  Label.deleteOne({name: label}, function(error, docs) {})
-                  ms.send(PSID, ms_moles.simple_message('remove successful!'), function(err, docs) {})
-                }
-                if (docs.error) ms.send(PSID, ms_moles.simple_message(docs.error.message), function(err, docs) {})
-              })
+              if (in_array(PSID, docs.PSID)) {
+                ms.remove_label( docs.ID, function(err, docs) {
+                  if (docs.success) {
+                    Label.deleteOne({name: label}, function(error, docs) {})
+                    ms.send(PSID, ms_moles.simple_message('Xóa thẻ '+label+' thành công.'), function(err, docs) {})
+                  }
+                  if (docs.error) ms.send(PSID, ms_moles.simple_message(docs.error.message), function(err, docs) {})
+                })
+              }
             } else {
-              ms.send(PSID, ms_moles.simple_message('label you want to remove is not exist'), function(err, docs) {
+              ms.send(PSID, ms_moles.simple_message('Thẻ ' +label+' không tồn tại'), function(err, docs) {
               })
             }
           })
           //db.set.remove_hashtag(PSID, label);
           break;
           case "follow_hashtag":
-          console.log('follow_hashtag');
-          //db.set.follow_hashtag(PSID, label);
+          Label.findOne({name: label}, function(error, docs) {
+            if (docs) {
+              ms.associate_label(PSID, docs.ID, function(err,docs) {
+                if (docs.success) {
+                  ms.send(PSID, ms_moles.simple_message('theo dõi thẻ '+label+' thành công'), function(err, docs){
+                  })
+                } else {
+                  ms.send(PSID, ms_moles.simple_message('theo dõi thẻ '+label+' không thành công'), function(err, docs){
+                })
+                }
+              })
+            }
+          })
           break;
           case "unfollow_hashtag":
           console.log('unfollow_hashtag');
-          //db.set.unfollow_hashtag(PSID, label);
+          Label.findOne({name: label}, function(error, docs) {
+            if (docs) {
+              ms.unassociate_label(PSID, docs.ID, function(err,docs) {
+                if (docs.success) {
+                  ms.send(PSID, ms_moles.simple_message('bỏ theo dõi '+label+' thẻ thành công'), function(err, docs){
+                  })
+                } else {
+                  ms.send(PSID, ms_moles.simple_message('bỏ theo dõi thẻ '+label+' không thành công'), function(err, docs){
+                })
+                }
+              })
+            }
+          })          
           break;          
           case "add_broadcast": 
           console.log('add_broadcast');
@@ -133,3 +152,10 @@ function handlePostback(PSID, postback) {
   }
 }
 module.exports.handle_webhook_event = handle_webhook_event;
+function in_array(a, b) {
+  var bool = false;
+  b.forEach(element => {
+    if (a === element) bool = true;
+  })
+  return bool;
+}

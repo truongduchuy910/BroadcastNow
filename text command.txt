@@ -1,6 +1,0 @@
-remove_label
-curl -X DELETE "https://graph.facebook.com/v2.11/2446029008801866/label?user=2059651660759708&&access_token=EAACubcIenBMBAJSCjvWSUFLw0pW8jMHXNrcledGZCsZAAUm60SMjvEyNxEy9Ls4xV3KZCdtI64HgQR7hNH89eZCNgiDZCqoFxByiN18f8upCx2D3qtd44e0SZB4EN6V21J6IbrYSNRh60jKjW9ywALS36FLPppnyU5oCGm1yZBu4MNnW3ni2N9D"
-
-get_label_details
-curl -X GET "https://graph.facebook.com/v2.11/me/custom_labels?fields=name&access_token=EAACubcIenBMBAJSCjvWSUFLw0pW8jMHXNrcledGZCsZAAUm60SMjvEyNxEy9Ls4xV3KZCdtI64HgQR7hNH89eZCNgiDZCqoFxByiN18f8upCx2D3qtd44e0SZB4EN6V21J6IbrYSNRh60jKjW9ywALS36FLPppnyU5oCGm1yZBu4MNnW3ni2N9D"
-

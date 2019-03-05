@@ -78,28 +78,25 @@ function retrieve_profile (PSID, callback) {
 // body = {
 //   "success": true  
 // }
-function associate_label (PSID, label, callback) {
-  Label.findOne({name: label}, function(error, docs) {
-    if (docs) {
-      request({
-        uri: "https://graph.facebook.com/v2.11/" +  docs.ID + "/label",
-        qs: { access_token: process.env.FACEBOOK_TOKEN },
-        method: "POST",
-        json: {    
-          user: PSID
-        }
-      }, (err, res, body) => {  
-        try { 
-          callback(err, body)
-        } catch (error) {
-          callback(error, body)
-        }
-      }); 
+function associate_label (PSID, ID, callback) {
+    request({
+      uri: "https://graph.facebook.com/v2.11/" +  ID + "/label",
+      qs: { access_token: process.env.FACEBOOK_TOKEN },
+      method: "POST",
+      json: {    
+        user: PSID
+      }
+    }, (err, res, body) => {  
+      try { 
+        callback(err, body)
+      } catch (error) {
+        callback(error, body)
+      }
     }
-  })
+    ); 
 }
 
-
+module.exports.associate_label = associate_label;
 //https://developers.facebook.com/docs/messenger-platform/send-messages/broadcast-messages#creating
 // body = {
 //   "message_creative_id": <BROADCAST_MESSAGE_ID>,
@@ -187,44 +184,21 @@ module.exports.broadcast = broadcast;
 // body = {
 //   "success": true  
 // }
-function unassociate_label (PSID, label, callback) {
-  Label.findOne({name: label}, function(error, docs) {
-
-    if (docs) {
-      request({
-        uri: "https://graph.facebook.com/v2.11/" +  docs.ID + "/label",
-        qs: { access_token: process.env.FACEBOOK_TOKEN },
-        method: "POST",
-        json: {    
-          user: PSID
-        }
-      },(err, res, body) => {  
-        callback(err, body)
-      }); 
+function unassociate_label (PSID, ID, callback) {
+  request({
+    uri: "https://graph.facebook.com/v2.11/" +  ID + "/label",
+    qs: { access_token: process.env.FACEBOOK_TOKEN },
+    method: "DELETE",
+    json: {    
+      user: PSID
     }
-  })
+  },(err, res, body) => {  
+    callback(err, body)
+  }); 
 }
 module.exports.unassociate_label = unassociate_label;
 
 // https://developers.facebook.com/docs/messenger-platform/send-messages/broadcast-messages/target-broadcasts#retrieving_labels_by_psid
-// body = {
-//   "data": [
-//     {
-//       "name": "myLabel",
-//       "id": "1001200005003"
-//     },
-//     {
-//       "name": "myOtherLabel",
-//       "id": "1001200005002"
-//     }
-//   ],
-//   "paging": {
-//     "cursors": {
-//       "before": "QVFIUmx1WTBpMGpJWXprYzVYaVhabW55dVpycko4U2xURGE5ODNtNFZAPal94a1hTUnNVMUtoMVVoTzlzSDktUkMtQkUzWEFLSXlMS3ZALYUw3TURLelZAPOGVR",
-//       "after": "QVFIUmItNkpTbjVzakxFWGRydzdaVUFNNnNPaUl0SmwzVHN5ZAWZAEQ3lZANDAzTXFIM0NHbHdYSkQ5OG1GaEozdjkzRmxpUFhxTDl4ZAlBibnE4LWt1eGlTa3Bn"
-//     }
-//   }
-// }
 function retrieve_PSID_label (PSID, callback) {
   request({
     uri: "https://graph.facebook.com/v2.11/"+PSID+"/custom_labels",
@@ -233,14 +207,8 @@ function retrieve_PSID_label (PSID, callback) {
       access_token: process.env.FACEBOOK_TOKEN 
     },
     method: "GET",
-  }, (err, res, Body) => {  
-    try { 
-      var body = JSON.parse(Body);
-      callback(err, body)
-    } catch (error) {
-      console.log('modules/messenger_API.js/retrieve_PSID_label')
-      console.log(error);
-    }
+  }, (err, res,  body) => {  
+    callback(err, JSON.parse(body));
   }); 
 }
 
