@@ -1,7 +1,6 @@
 //Tất cả, và chỉ những tao thác liên quan tới request đến Facebook sẽ được đặt ở đây
 
 var request     = require('request')
-const db        = require('./mongodb_API')
 var colors      = require('colors');
 var User        = require('../models/users');
 var Label       = require('../models/label');
@@ -42,14 +41,6 @@ function create_label (PSID, Hashtag, callback) {
 };
 module.exports.create_label = create_label;
 //https://developers.facebook.com/docs/messenger-platform/identity/user-profile
-// body = {
-//   "first_name": "Peter",
-//   "last_name": "Chang",
-//   "profile_pic": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpf1/v/t1.0-1/p200x200/13055603_10105219398495383_8237637584159975445_n.jpg?oh=1d241d4b6d4dac50eaf9bb73288ea192&oe=57AF5C03&__gda__=1470213755_ab17c8c8e3a0a447fed3f272fa2179ce",
-//   "locale": "en_US",
-//   "timezone": -7,
-//   "gender": "male",
-// }
 function retrieve_profile (PSID, callback) {
   request({
     uri: "https://graph.facebook.com/" + PSID,
@@ -58,21 +49,11 @@ function retrieve_profile (PSID, callback) {
       fields: "first_name,last_name,profile_pic"
     },
     method: "GET",
-  }, (err, res, data) => {   
-    var body = JSON.parse(data);
-    try { 
-      var error = body.error;
-      callback(error, body)
-    } catch (error) {
-      console.log('modules/messenger_API.js/retrieve_profile')
-      console.log('dữ liệu: ');
-      console.log(body);
-      console.log('lỗi: ');
-      console.log(err);
-    }
+  }, (err, res, body) => {   
+     callback(err, JSON.parse(body));
   })
 }
-
+module.exports.retrieve_profile = retrieve_profile;
 
 //https://developers.facebook.com/docs/messenger-platform/send-messages/broadcast-messages/target-broadcasts#associate_label
 // body = {
@@ -109,14 +90,9 @@ function message_creatives (message, callback) {
     json: {
       messages: [message]
     }
-  },(err, res, Body) => {  
-    try { 
-      var body = JSON.parse(Body);
-      callback(body.error, body)
-    } catch (error) {
-      console.log('modules/messenger_API.js/message_creatives')
-      callback(err, Body)
-    }
+  },(err, res, Body) => {
+    callback(err, Body);
+
   }); 
 }
 
@@ -134,13 +110,7 @@ function broadcast_messages (message_creative_id, custom_label_id, callback) {
       custom_label_id: custom_label_id
     }
   }, (err, res, Body) => {  
-    try { 
-      var body = JSON.parse(Body);
-      callback(body.error, body)
-    } catch (error) {
-      console.log('modules/messenger_API.js/broadcast_messages')
-      callback(Body.error, Body);
-    }
+    callback(err, Body);
   }); 
 }
 function in_array (PSID, PSIDs) {
@@ -156,25 +126,43 @@ function in_array (PSID, PSIDs) {
   }
   return in_array;
 }
-function broadcast(PSID, label, message) {
-  db.find.custom_labels_id(label, function(error, custom_labels_id) {
-    if (custom_labels_id[0].PSID) {
-      if (in_array(PSID, custom_labels_id[0].PSID)) {
+var Broadcast   = require('../models/broadcast');
+
+function broadcast(PSID, label, message, callback) {
+  Label.findOne({name: label}, function(error, labels) {
+    if (labels) {
+      if (in_array(PSID, labels.PSID)) {
         message_creatives(message, function (error, docs) {
-          console.log(docs);  
           if (docs.message_creative_id) {
-            broadcast_messages(docs.message_creative_id, custom_labels_id[0].ID, function(error, docs) {
-              if (!docs.error) console.log('gửi thành công');
+            broadcast_messages(docs.message_creative_id, labels.ID, function(error, docs) {
+              if (!docs.error) {
+                if (message.text) {
+                  var new_broadcast     = new Broadcast();
+                  new_broadcast.PSID    = PSID;
+                  new_broadcast.ID      = docs.broadcast_id;
+                  new_broadcast.label   = label;
+                  new_broadcast.content = message.text;
+                  var d = new Date();
+                  new_broadcast.date    = d.getTime();
+                  new_broadcast.save(function(err) {
+
+                  });
+                }
+                console.log('gửi thành công');
+              }
+
+              callback(error, docs);
             } )        
           } else {
-            console.log('tạo thẻ để phát tán thất bại');
+            console.log('tạo thẻ để phát tán thất bại: ');
+            console.log(docs);
           }
         })
       } else {
         console.log('không có quyền gửi thẻ');
       }
     } else {
-      console.log('thẻ không tồn tại trên hệ thống');
+      console.log('thẻ ' +label+'không tồn tại trên hệ thống');
     }
   })
 }

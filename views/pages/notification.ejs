@@ -1,0 +1,30 @@
+<!-- views/signup.ejs -->
+<!doctype html>
+<html>
+    <head>
+        <% include ../partials/header.ejs %>
+    </head>
+<body>
+<div class="container" style="max-width: 540px; margin:auto">
+<header>
+</header>
+<section>
+    <p class="text-justify">
+        <span class="badge badge-info"><%=notification.date%></span>
+        <b><%=notification.title%></b>
+    </p>
+    
+    <hr/>
+    <p class="text-justify">
+        <div id="content"></div>
+        <%-notification.contentHTML%>
+    </p>
+
+</section><br/>
+<section>
+</section>
+<footer>
+</footer>
+</div>
+</body>
+</html>

@@ -1,7 +1,6 @@
 
 const puppeteer = require('puppeteer');
-const db = require('../modules/mongodb_API');
-const ms_model = require('../models/messenger');
+const ms_models = require('../models/messenger');
 const ms = require('../modules/messenger_API');
 var Public_dut           = require('../models/public.dut');
 async function new_notifications(callback) {
@@ -33,42 +32,28 @@ async function new_notifications(callback) {
 
         var notification = []; 
         div_notifications.forEach(element => {
-
-            var link = [];
-            //
-            var div_link = element.querySelectorAll('a');
-            div_link.forEach( element => {
-                link.push({
-                    content: element.innerText,
-                    url: element.href
-                });
-            });
-
             var date;
-            var dateObj;
             var title;
             //thỉnh thoảng trang trường bị lỗi đăng thông báo và header rời nhau
             try {
               date = element.querySelectorAll('p.MsoNormal>b>span')[0].textContent;
               title = element.querySelectorAll('p.MsoNormal>span')[0].textContent;
-              if (date) dateObj = new Date(date.slice(6,10), date.slice(3,5), date.slice(0,2));
             }
             catch(error) {
               date = 'error';
               title = 'error';
               dateObj = null;
             }
-            var Body = element.innerText
-            var content = Body.slice(Body.lastIndexOf('\n\n') + 2, Body.length);                     
+
+
+
+            element.querySelectorAll('p.MsoNormal')[0].remove();
+            var contentHTML = element.innerHTML;
+
             notification.push({
                 date: date, 
-                dateObj: dateObj,
-                
-                title: title,
-                content: content,
-                
-                body: Body,
-                link: link,
+                title: title, 
+                contentHTML: contentHTML,
             });
         });  
         return notification;    
@@ -96,19 +81,31 @@ async function new_notifications(callback) {
     .then(function(docs) {
         docs.forEach(element => {
             if (element) {
+                var d = new Date();
                 var new_public_dut = new Public_dut();
                 new_public_dut.date    = element.date    ;
+                new_public_dut.dateObj = d.getTime();
                 new_public_dut.title   = element.title   ;
-                new_public_dut.content = element.content ;
-                new_public_dut.link    = element.link    ;
-                new_public_dut.body    = element.body    ;
-                new_public_dut.save(function(err) {   
+                new_public_dut.contentHTML    = element.contentHTML    ;
+                new_public_dut.ID      = radom();
+                ms.broadcast(process.env.public_dut, "public.dut", ms_models.notification(new_public_dut),function(err,docs){
+                    console.log('Gửi Public.dut Thành Công');
+                    
+                    new_public_dut.save(function(err) {   
                 });
-                //ms.broadcast(process.env.public_dut, "public.dut", ms_model.notification(element))
-                //db.set.add_notification(element);
+                })
             }
         })
         callback({}, docs);
     })
 }
 module.exports.new_notifications = new_notifications;
+function radom() {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+    for (var i = 0; i < 20; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return text;
+}

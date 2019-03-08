@@ -32,10 +32,5 @@ require('./routers/pages')(app);
 require('./API/API')(app);
 require('./routers/authentication')(app, passport);
 
-
-
-
-
-
 app.listen(PORT, () => console.log(`Listening on ${ PORT } `))
 

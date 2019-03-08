@@ -21,9 +21,18 @@ module.exports = function(app){
     })
     app.get('/tenaiti', function(req, res) {
         res.render('../views/pages/tenaiti.ejs', {});
+    });
+    var Public_dut       = require('../models/public.dut');
+    app.get('/notification', function(req,res){
+        Public_dut.findOne({ID: req.query.ID}, function(err, docs) {
+            console.log(docs);
+            res.render('../views/pages/notification.ejs', {
+                notification: docs
+            });
+        })
+        
     })
-
-    var request     = require('request')
+    const wit = require('../modules/wit_API');
     app.get('/functions', function(req, res) {
         res.send('OK');
     })

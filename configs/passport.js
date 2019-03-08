@@ -1,7 +1,6 @@
 // config/passport.js
 var LocalStrategy   = require('passport-local').Strategy;
 var User            = require('../models/users');
-var db              = require('../modules/mongodb_API');
 var request = require('request')
 
 module.exports = function(passport) {
@@ -72,5 +71,5 @@ function radom() {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
   
     return text;
-  }
+}
   
