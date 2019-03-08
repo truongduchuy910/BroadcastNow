@@ -1,8 +1,6 @@
 //Tất cả, và chỉ những tao thác liên quan tới request đến Facebook sẽ được đặt ở đây
 
 var request     = require('request')
-var colors      = require('colors');
-var User        = require('../models/users');
 var Label       = require('../models/label');
 
 // error example
