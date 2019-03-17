@@ -29,7 +29,7 @@ app.use(flash());
 
 require('./routers/messenge')(app);
 require('./routers/pages')(app);
-require('./routers/APII')(app);
+require('./routers/API')(app);
 require('./routers/authentication')(app, passport);
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT } `))

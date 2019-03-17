@@ -1,7 +1,7 @@
 
 const puppeteer = require('puppeteer');
 const ms_models = require('../models/messenger');
-const ms = require('../modules/messenger_API');
+const ms = require('../modules/API/messenge');
 var Public_dut           = require('../models/public.dut');
 async function new_notifications(callback) {
     console.log('chạy hàm new_notifications()');
