@@ -32,7 +32,7 @@ module.exports = function(app){
         })
         
     })
-    const wit = require('../modules/wit_API');
+    const wit = require('../modules/API/wit');
     app.get('/functions', function(req, res) {
         res.send('OK');
     })

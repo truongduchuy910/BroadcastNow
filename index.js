@@ -27,9 +27,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); 
 
-require('./routers/messenger_webhook')(app);
+require('./routers/messenge')(app);
 require('./routers/pages')(app);
-require('./API/API')(app);
+//require('./API/API')(app);
 require('./routers/authentication')(app, passport);
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT } `))
