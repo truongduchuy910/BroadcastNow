@@ -4,6 +4,7 @@ const Ms         = require('./API/messenge');
 const Ms_models  = require('../models/messenger');
 var Label        = require('../models/label');
 var PSIDs        = require('../models/PSID');
+var Message      = require('../models/message');
 
 var Request      = require('./request');
 
@@ -234,17 +235,25 @@ function entity_parse(docs){
   }
   function add_user(PSID) {
     PSIDs.findOne({PSID: PSID}, function(err, docs){
-      if (!docs) {
-        Ms.retrieve_profile(PSID, function(err,docs){
-          var new_PSID = new PSIDs();
-          new_PSID.PSID        = PSID;
-          new_PSID.first_name  = docs.first_name;
-          new_PSID.last_name   = docs.last_name;
-          new_PSID.profile_pic = docs.profile_pic;
-          new_PSID.save(function(err) {  
-          });
-        })
-        
-      }
+        Message.findOne({type: 'start'}, function(err, docs) {
+            if (docs.message) {
+                Ms.send(PSID, docs.message, function(err, docs) {
+                    console.log(docs);
+                })
+            } else {
+                console.log(docs);
+            }
+        });
+        if (!docs) {
+            Ms.retrieve_profile(PSID, function(err,docs){
+                var new_PSID = new PSIDs();
+                new_PSID.PSID        = PSID;
+                new_PSID.first_name  = docs.first_name;
+                new_PSID.last_name   = docs.last_name;
+                new_PSID.profile_pic = docs.profile_pic;
+                new_PSID.save(function(err) {  
+                });
+            })
+         }
     });
   }
