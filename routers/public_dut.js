@@ -89,9 +89,8 @@ async function new_notifications(callback) {
                 new_public_dut.contentHTML    = element.contentHTML    ;
                 new_public_dut.ID      = radom();
                 ms.broadcast(process.env.public_dut, "public.dut", ms_models.notification(new_public_dut),function(err,docs){
-                    console.log('Gửi Public.dut Thành Công');
-                    
-                    new_public_dut.save(function(err) {   
+                    console.log(err, docs);
+                    if (docs) new_public_dut.save(function(err) {   
                 });
                 })
             }

@@ -6,7 +6,8 @@ var PSIDSchema = mongoose.Schema({
     last_name: String,
     profile_pic: String,
     wait_to_response: false,
-    previous_label: ""
+    previous_label: "",
+    time: Date
 
 });
 module.exports = mongoose.model('PSID', PSIDSchema);

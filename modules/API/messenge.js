@@ -139,6 +139,7 @@ function broadcast(PSID, label, message, callback) {
               
             } )        
           } else {
+            console.log(error, docs);
             callback({
               message: 'Lỗi: Tạo tin nhắn để phát tán thất bại.'
             }, null);

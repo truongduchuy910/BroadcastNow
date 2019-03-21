@@ -247,10 +247,12 @@ function entity_parse(docs){
             });
             Ms.retrieve_profile(PSID, function(err,docs){
                 var new_PSID = new PSIDs();
+                var d = new Date();
                 new_PSID.PSID        = PSID;
                 new_PSID.first_name  = docs.first_name;
                 new_PSID.last_name   = docs.last_name;
                 new_PSID.profile_pic = docs.profile_pic;
+                new_PSID.time        = d.getTime();
                 new_PSID.save(function(err) {  
                 });
             })
